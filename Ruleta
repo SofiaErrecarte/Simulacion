@@ -62,3 +62,4 @@ for j in range(0,corridas):
     plt.plot(x, [desvio for i in x])
 
 plt.show()
+#muy bien
