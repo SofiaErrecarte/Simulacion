@@ -2,6 +2,7 @@ import random
 import math
 import matplotlib.pyplot as plt
 import statistics as stats
+import collections
 
 tiradas = int(input("Ingrese numero de tiradas: "))
 numero = int(input("Ingrese un numero a apostar: "))
@@ -46,20 +47,60 @@ for j in range(0,corridas):
         cont_tiradas += 1
 
     #Graficas
-
     x=range(0,tiradas)
     plt.subplot(221)
-    plt.plot(x, [frec_esperada for i in x])
     plt.plot(x,frec_relativa)
     plt.subplot(222)
     plt.plot(x,valor_promedio)
-    plt.plot(x, [prom for i in x])
     plt.subplot(223)
     plt.plot(x, varianza_lista)
-    plt.plot(x, [varianza for i in x])
     plt.subplot(224)
     plt.plot(x, desvio_lista)
-    plt.plot(x, [desvio for i in x])
+
+
+plt.subplot(221)
+plt.plot(x, [frec_esperada for i in x], label="FR Esperada")
+plt.legend(loc="lower right")
+plt.title('Frecuencia Relativa')
+plt.ylabel('FR para el número ' + str(numero))
+plt.xlabel('N(tiradas)')
+
+plt.subplot(222)
+plt.plot(x, [prom for i in x], label="Prom. Esperado")
+plt.legend(loc="lower right")
+plt.title('Valor Promedio')
+plt.ylabel('Valor Promedio')
+plt.xlabel('N(tiradas)')
+
+plt.subplot(223)
+plt.plot(x, [varianza for i in x], label="Var. Esperada")
+plt.legend(loc="lower right")
+plt.title('Varianza')
+plt.ylabel('VAR')
+plt.xlabel('N(tiradas)')
+
+plt.subplot(224)
+plt.plot(x, [desvio for i in x], label="Desv. Esperada")
+plt.legend(loc="lower right")
+plt.title('Desviación Estándar')
+plt.ylabel('STD')
+plt.xlabel('N(tiradas)')
 
 plt.show()
-#muy bien
+if corridas==1:
+    freq_absoulta = collections.Counter(numeros_aleatorios)
+    freq_relativa = {k: v / tiradas for k, v in freq_absoulta.items()}
+    plt.stem(freq_absoulta.keys(), freq_absoulta.values(), use_line_collection=True)
+    plt.title("Frecuencia Absoluta")
+    plt.ylabel("FAbs")
+    plt.xlabel("Numeros de Ruleta")
+    plt.show()
+    plt.stem(freq_relativa.keys(), freq_relativa.values(), use_line_collection=True)
+    plt.title("Frecuencia Relativa")
+    plt.ylabel("FR")
+    plt.xlabel("Numeros de Ruleta")
+    plt.show()
+    plt.boxplot(numeros_aleatorios)
+    plt.title("Diagrama de caja")
+    plt.ylabel("Numeros de Ruleta")
+    plt.show()
