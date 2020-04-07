@@ -90,11 +90,12 @@ plt.show()
 if corridas==1:
     freq_absoulta = collections.Counter(numeros_aleatorios)
     freq_relativa = {k: v / tiradas for k, v in freq_absoulta.items()}
+    plt.subplot(211)
     plt.stem(freq_absoulta.keys(), freq_absoulta.values(), use_line_collection=True)
     plt.title("Frecuencia Absoluta")
     plt.ylabel("FAbs")
     plt.xlabel("Numeros de Ruleta")
-    plt.show()
+    plt.subplot(212)
     plt.stem(freq_relativa.keys(), freq_relativa.values(), use_line_collection=True)
     plt.title("Frecuencia Relativa")
     plt.ylabel("FR")
