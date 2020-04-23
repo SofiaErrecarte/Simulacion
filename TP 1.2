@@ -4,48 +4,185 @@ import matplotlib.pyplot as plt
 import statistics as stats
 import collections
 
-numeros_ruleta = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-                  26, 27, 28, 29, 30, 31, 32, 33, 35, 35, 36]
+numeros_ruleta = list(range(0,37))
+
 
 
 # MENU
 def menu():
-    print("Bienvenidos a la Ruleta")
-    print("Menu:")
-    print("1 - Martingala")
-    # continua menu
-
+    print("Menu: 0 para salir")
+    print("1 - Martingala") #Martingala par/impar
+    print("2 - Jugar al mismo número")
     rta = int(input("Ingrese la opcion elegida: "))
     return rta
 
 
-def martingala():
-    # MARTINGALA
+# MARTINGALA
+def martingala(capital):
     dinero = []
     rta = int(input("Ingrese 1 si quiere apostar a impar o 2 si quiere apostar a par: "))
     monto = int(input("Ingrese apuesta inicial: "))
     t = 0
-    dinero.append(0)
-    dinero.append(monto)  # monto inicial
-    ganado = False
-    # impar
-    if rta == 1:
+    numerosSalidos = []
+
+    #CAPITAL FINITO
+    if capital != 0:
+
+        #IMPAR
+        if rta == 1:
+            dinero.append(capital)
+            while capital>=monto:
+                t = t + 1
+                n = random.randint(1, 36)
+                if n % 2 == 0 :
+                    x = len(dinero)
+                    capital = capital-monto
+                    dinero.append(capital) #muestra lo q apuesta y gana hasta q se queda sin plata
+                    numerosSalidos.append(n)
+                    monto = monto * 2 #apuesta el doble de la anterior
+                else:
+                    x = len(dinero)
+                    capital = capital + monto*2 #le pagan el doble
+                    dinero.append(capital)
+                    numerosSalidos.append(n)
+            x = len(dinero)
+            print(dinero)
+            print("Numeros salidos hasta que gano: ", numerosSalidos)
+            x1 = range(0, x)
+            plt.plot(x1, dinero , label="Martingala")
+            plt.plot(x1, [dinero[0] for i in x1]) #capital incial
+
+        #PAR
+        else:
+            dinero.append(capital)
+            while capital >= monto:
+                t = t + 1
+                n = random.randint(1, 36)
+                if n % 2 != 0:
+                    x = len(dinero)
+                    capital = capital - monto
+                    dinero.append(capital)  # muestra lo q apuesta y gana hasta q se queda sin plata
+                    numerosSalidos.append(n)
+                    monto = monto * 2  # apuesta el doble de la anterior
+                else:
+                    x = len(dinero)
+                    capital = capital + monto * 2  # le pagan el doble
+                    dinero.append(capital)
+                    numerosSalidos.append(n)
+            x = len(dinero)
+            print("Termino su capital en la vuelta: ", t)
+            print(dinero)
+            print("Numeros salidos hasta que gano: ", numerosSalidos)
+            x1 = range(0, x)
+            plt.plot(x1, dinero, label="Martingala")
+            plt.plot(x1, [dinero[0] for i in x1]) #capital inicial
+
+
+    #CAPITAL INFITNITO
+    else:
+        dinero.append(monto)  # monto inicial
+        ganado = False
+
+        # impar
+        if rta == 1:
+            while ganado == False:
+                t = t + 1
+                n = random.randint(1, 36)
+                if n % 2 == 0 :
+                    x = len(dinero)
+                    dinero.append(dinero[x - 1] * 2 )
+                else:
+                    ganado = True
+                    x = len(dinero)
+                    print("Gano en tirada: ", t," $", dinero[x-1]*2)
+                    print(dinero)
+                    x1 = range(0, x)
+                    plt.plot(x1, dinero, label="Martingala")
+                    #plt.show()
+        # par
+        if rta == 2:
+            while ganado == False:
+                t = t+1
+                n = random.randint(1, 36)
+                if n % 2 != 0:
+                    x = len(dinero)
+                    dinero.append(dinero[x-1] * 2)
+                else:
+                    ganado = True
+                    x = len(dinero)
+                    print("Gano en tirada: ", t, " $", dinero[x - 1] * 2)  # gana el doble
+                    print(dinero)
+                    x1 = range(0, x)
+                    plt.plot(x1, dinero, label="Martingala")
+
+
+
+
+# MISMO NUMERO
+def mismoNumero(capital):
+    dinero = []
+    num = int(input("Ingrese el número: "))
+    monto = int(input("Ingrese apuesta inicial: "))
+    t = 0
+    numerosSalidos = []
+
+    # CAPITAL FINITO
+    if capital != 0:
+        dinero.append(capital)  # capital inicial
+        while capital>=monto:
+            t = t + 1
+            n = random.randint(0, 36)
+            if n != num:
+                x = len(dinero)
+                capital = capital-monto
+                dinero.append(capital) #muestr lo q apuesta y gana hasta q se queda sin plata
+                numerosSalidos.append(n)
+            else:
+                x = len(dinero)
+                capital = capital + monto*36
+                dinero.append(capital)
+                numerosSalidos.append(n)
+        x = len(dinero)
+        print("Termino su capital en: ", t)
+        print(dinero)
+        print("Numeros salidos hasta que gano: ", numerosSalidos)
+        x1 = range(0, x)
+        plt.plot(x1, dinero, label="Mismo numero")
+        plt.plot(x1, [dinero[0] for i in x1]) #capital
+
+    #CAPITAL INFINITO
+    else:
+        ganado = False
+        dinero.append(monto)
         while ganado == False:
             t = t + 1
             n = random.randint(1, 36)
-            if n % 2 == 0 :
+            if n != num:
                 x = len(dinero)
-                dinero.append(dinero[x - 1] * 2 + 2)
+                dinero.append(dinero[x - 1] + monto) #muestra como aumenta lo q tiene que poner hasta ganar
             else:
                 ganado = True
-                print("Gano en tirada: ", t)
-                print(dinero)
                 x = len(dinero)
+                print("Gano en tirada: ", t," $", monto*36)
+                print(dinero)
                 x1 = range(0, x)
-                plt.plot(x1, dinero)
-                plt.show()
+                plt.plot(x1, dinero, label="Mismo numero")
 
 
-rta = menu()
-if rta == 1:
-    martingala()
+
+print("Bienvenidos a la Ruleta")
+seguir=int(input("1 jugar, 0 salir: "))
+while seguir ==1:
+    capElegido =  int(input("Ingrese 1 si quiere jugar con capital finito o 2 si quiere jugar con capital infinito: "))
+    if capElegido == 1:
+        capital = int(input("Cual es su capital : "))
+    else:
+        capital = 0
+    rta = menu()
+    if rta == 1: martingala(capital)
+    elif rta == 2: mismoNumero(capital)
+    seguir = int(input("1 jugar, 0 salir: "))
+
+plt.xlim(0, 100)
+plt.legend(loc="lower right")
+plt.show()
