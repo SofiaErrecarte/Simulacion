@@ -13,6 +13,7 @@ def menu():
     print("Menu: 0 para salir")
     print("1 - Martingala") #Martingala par/impar
     print("2 - Jugar al mismo número")
+    print("3 - Jugar por docena")
     rta = int(input("Ingrese la opcion elegida: "))
     return rta
 
@@ -169,6 +170,51 @@ def mismoNumero(capital):
                 plt.plot(x1, dinero, label="Mismo numero")
 
 
+#POR DOCENA
+def docena(capital):
+    rta = int(input("Ingrese a que docena desea apostar: \n1) 1-12 \n2) 13-24 \n3) 25-36\n"))
+    dinero = []
+    monto = int(input("Ingrese apuesta inicial: "))
+    t = 0
+    numerosSalidos = []
+    docenax = []
+    if rta == 1: 
+        docenax=list(range(1,13))
+    elif rta == 2: 
+        docenax=list(range(13,25))
+    elif rta==3: 
+        docenax=list(range(25,37))
+    
+    print(rta)
+    print(docenax)
+
+
+    #CAPITAL FINITO
+    if capital!=0:
+        dinero.append(capital)  # capital inicial
+        while capital>=monto:
+            t = t + 1
+            n = random.randint(0, 36)
+            if n in docenax:
+                x = len(dinero)
+                capital = capital + monto*3
+                dinero.append(capital)
+                numerosSalidos.append(n)
+            else:
+                x = len(dinero)
+                capital = capital-monto
+                dinero.append(capital) #muestr lo q apuesta y gana hasta q se queda sin plata
+                numerosSalidos.append(n)
+        x = len(dinero)
+        print("Termino su capital en: ", t)
+        print(dinero)
+        print("Numeros salidos hasta que gano: ", numerosSalidos)
+        x1 = range(0, x)
+        plt.plot(x1, dinero, label="Mismo numero")
+        plt.plot(x1, [dinero[0] for i in x1]) #capital
+
+
+
 
 print("Bienvenidos a la Ruleta")
 seguir=int(input("1 jugar, 0 salir: "))
@@ -181,6 +227,7 @@ while seguir ==1:
     rta = menu()
     if rta == 1: martingala(capital)
     elif rta == 2: mismoNumero(capital)
+    elif rta == 3: docena(capital)
     seguir = int(input("1 jugar, 0 salir: "))
 
 plt.xlim(0, 100)
