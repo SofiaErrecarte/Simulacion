@@ -5,7 +5,7 @@ import statistics as stats
 import collections
 
 numeros_ruleta = list(range(0,37))
-lim_tiradas = 5000 #limite de tiradas p capital infinito, para por docena en cap finito y para funcion capital inicial 
+lim_tiradas = 500 #limite de tiradas p capital infinito, para por docena en cap finito y para funcion capital inicial 
 
 
 
@@ -49,8 +49,8 @@ def martingala(capital):
                     numerosSalidos.append(n)
             x = len(dinero)
             print("Termino su capital en la vuelta: ", t)
-            print(dinero)
-            print("Numeros salidos hasta que gano: ", numerosSalidos)
+            #print(dinero)
+            #print("Numeros salidos hasta que gano: ", numerosSalidos)
             x1 = range(0, x)
             plt.plot(x1, dinero , label="Martingala con capital finito")
 
@@ -73,8 +73,8 @@ def martingala(capital):
                     numerosSalidos.append(n)
             x = len(dinero)
             print("Termino su capital en la vuelta: ", t)
-            print(dinero)
-            print("Numeros salidos hasta que gano: ", numerosSalidos)
+            #print(dinero)
+            #print("Numeros salidos hasta que gano: ", numerosSalidos)
             x1 = range(0, x)
             plt.plot(x1, dinero, label="Martingala con capital finito")
 
@@ -101,8 +101,8 @@ def martingala(capital):
                     dinero.append(capital)
                     numerosSalidos.append(n)
             x = len(dinero)
-            print(dinero)
-            print("Numeros salidos: ", numerosSalidos)
+            #print(dinero)
+            #print("Numeros salidos: ", numerosSalidos)
             x1 = range(0, x)
             plt.plot(x1, dinero , label="Martingala con capital Inifinto")
         
@@ -124,8 +124,8 @@ def martingala(capital):
                     dinero.append(capital)
                     numerosSalidos.append(n)
             x = len(dinero)
-            print(dinero)
-            print("Numeros salidos: ", numerosSalidos)
+            #print(dinero)
+            #print("Numeros salidos: ", numerosSalidos)
             x1 = range(0, x)
             plt.plot(x1, dinero, label="Martingala con capital Infinito")
 
@@ -156,8 +156,8 @@ def mismoNumero(capital):
                 numerosSalidos.append(n)
         x = len(dinero)
         print("Termino su capital en: ", t)
-        print(dinero)
-        print("Numeros salidos hasta que gano: ", numerosSalidos)
+        #print(dinero)
+        #print("Numeros salidos hasta que gano: ", numerosSalidos)
         x1 = range(0, x)
         plt.plot(x1, dinero, label="Mismo numero con capital finito")
 
@@ -179,8 +179,8 @@ def mismoNumero(capital):
                 dinero.append(capital)
                 numerosSalidos.append(n)
         x = len(dinero)
-        print(dinero)
-        print("Numeros salidos: ", numerosSalidos)
+        #print(dinero)
+        #print("Numeros salidos: ", numerosSalidos)
         x1 = range(0, x)
         plt.plot(x1, dinero, label="Mismo numero con capital Inifinito")
 
@@ -209,7 +209,7 @@ def docena(capital):
             n = random.randint(0, 36)
             if n in docenax:
                 x = len(dinero)
-                capital = capital + monto*3
+                capital = capital + monto*2
                 dinero.append(capital)
                 numerosSalidos.append(n)
             else:
@@ -219,8 +219,8 @@ def docena(capital):
                 numerosSalidos.append(n)
         x = len(dinero)
         print("Termino su capital en: ", t)
-        print(dinero)
-        print("Numeros salidos hasta que gano: ", numerosSalidos)
+        #print(dinero)
+        #print("Numeros salidos hasta que gano: ", numerosSalidos)
         x1 = range(0, x)
         dinero_en_0 = dinero[0]
         plt.plot(x1, dinero, label="Por docena con capital")
@@ -234,7 +234,7 @@ def docena(capital):
             n = random.randint(0, 36)
             if n in docenax:
                 x = len(dinero)
-                capital = capital + monto*3
+                capital = capital + monto*2
                 dinero.append(capital)
                 numerosSalidos.append(n)
             else:
@@ -243,8 +243,8 @@ def docena(capital):
                 dinero.append(capital) #muestrawd lo q apuesta y gana hasta q se queda sin plata
                 numerosSalidos.append(n)
         x = len(dinero)
-        print(dinero)
-        print("Numeros salidos ", numerosSalidos)
+        #print(dinero)
+        #print("Numeros salidos ", numerosSalidos)
         x1 = range(0, x)
         plt.plot(x1, dinero, label="Por docena con capital infinito")
         #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
