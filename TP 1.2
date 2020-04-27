@@ -5,7 +5,7 @@ import statistics as stats
 import collections
 
 numeros_ruleta = list(range(0,37))
-lim_tiradas = 500 #limite de tiradas p capital infinito, para por docena en cap finito y para funcion capital inicial 
+lim_tiradas = 5000 #limite de tiradas p capital infinito, para por docena en cap finito y para funcion capital inicial 
 
 
 
@@ -223,7 +223,7 @@ def docena(capital):
         #print("Numeros salidos hasta que gano: ", numerosSalidos)
         x1 = range(0, x)
         dinero_en_0 = dinero[0]
-        plt.plot(x1, dinero, label="Por docena con capital")
+        plt.plot(x1, dinero, label="Por docena con capital finito")
         #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
         
     #CAPITAL INFINITO
