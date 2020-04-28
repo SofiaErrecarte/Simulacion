@@ -44,7 +44,7 @@ def martingala(capital):
                     monto = monto * 2 #apuesta el doble de la anterior
                 else:
                     x = len(dinero)
-                    capital = capital + monto*2 #le pagan el doble
+                    capital = capital + monto*1 #le pagan el monto*1
                     dinero.append(capital)
                     numerosSalidos.append(n)
             x = len(dinero)
@@ -68,7 +68,7 @@ def martingala(capital):
                     monto = monto * 2  # apuesta el doble de la anterior
                 else:
                     x = len(dinero)
-                    capital = capital + monto * 2  # le pagan el doble
+                    capital = capital + monto * 1  # le pagan el monto*1
                     dinero.append(capital)
                     numerosSalidos.append(n)
             x = len(dinero)
@@ -86,18 +86,18 @@ def martingala(capital):
         if rta == 1:
             dinero.append(capital)
             t = 0
-            while t<=lim_tiradas :
+            for i in range (0, lim_tiradas):
                 t = t + 1
                 n = random.randint(0, 36)
                 if n % 2 == 0 or n==0: #num pares o cero
                     x = len(dinero)
                     capital = capital-monto
-                    dinero.append(capital) #muestra fluctuacion de caja hasta q se queda sin poder apostar mas 
+                    dinero.append(capital) #muestra fluctuacion de caja hasta q terminan las vueltas
                     numerosSalidos.append(n)
                     monto = monto * 2 #apuesta el doble de la anterior
                 else:
                     x = len(dinero)
-                    capital = capital + monto*2 #le pagan el doble
+                    capital = capital + monto* 1  # le pagan el monto*1
                     dinero.append(capital)
                     numerosSalidos.append(n)
             x = len(dinero)
@@ -120,7 +120,7 @@ def martingala(capital):
                     monto = monto * 2  # apuesta el doble de la anterior
                 else:
                     x = len(dinero)
-                    capital = capital + monto * 2  # le pagan el doble
+                    capital = capital + monto * 1  # le pagan el monto*1
                     dinero.append(capital)
                     numerosSalidos.append(n)
             x = len(dinero)
@@ -171,7 +171,7 @@ def mismoNumero(capital):
             if n != num:
                 x = len(dinero)
                 capital = capital-monto
-                dinero.append(capital) # muestra lo q apuesta y gana hasta q se queda sin plata
+                dinero.append(capital) # muestra lo q apuesta y gana hasta q terminan las vueltas
                 numerosSalidos.append(n)
             else:
                 x = len(dinero)
@@ -240,7 +240,7 @@ def docena(capital):
             else:
                 x = len(dinero)
                 capital = capital-monto
-                dinero.append(capital) #muestrawd lo q apuesta y gana hasta q se queda sin plata
+                dinero.append(capital) #muestra lo q apuesta y gana hasta q terminan las vueltas
                 numerosSalidos.append(n)
         x = len(dinero)
         #print(dinero)
