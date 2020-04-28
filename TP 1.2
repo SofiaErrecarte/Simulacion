@@ -6,7 +6,8 @@ import collections
 
 numeros_ruleta = list(range(0,37))
 lim_tiradas = 1000 #limite de tiradas p capital infinito, para por docena en cap finito y para funcion capital inicial
-lim_capital = 2500
+monto_ini = 0
+lim_capital = monto_ini *10
 
 
 
@@ -44,9 +45,10 @@ def martingala(capital):
                     dinero.append(capital) #muestra fluctuacion de caja hasta q se queda sin poder apostar mas 
                     numerosSalidos.append(n)
                     monto = monto * 2 #apuesta el doble de la anterior
+                    if monto>lim_capital: monto = monto_ini
                 else:
                     x = len(dinero)
-                    capital = capital + monto*2 #le pagan el doble
+                    capital = capital + monto*1 #le pagan el doble
                     dinero.append(capital)
                     numerosSalidos.append(n)
             x = len(dinero)
@@ -68,9 +70,10 @@ def martingala(capital):
                     dinero.append(capital) #muestra fluctuacion de caja hasta q se queda sin poder apostar mas 
                     numerosSalidos.append(n)
                     monto = monto * 2  # apuesta el doble de la anterior
+                    if monto>lim_capital: monto = monto_ini
                 else:
                     x = len(dinero)
-                    capital = capital + monto * 2  # le pagan el doble
+                    capital = capital + monto * 1  # le pagan el doble
                     dinero.append(capital)
                     numerosSalidos.append(n)
             x = len(dinero)
@@ -141,7 +144,7 @@ def mismoNumero(capital):
     monto = int(input("Ingrese apuesta inicial: "))
     t = 0
     numerosSalidos = []
-
+    monto_ini=monto
     # CAPITAL FINITO
     if capital != 0:
         dinero.append(capital)  # capital inicial
@@ -177,6 +180,7 @@ def mismoNumero(capital):
                 capital = capital-monto
                 dinero.append(capital) # muestra lo q apuesta y gana hasta q se queda sin plata
                 numerosSalidos.append(n)
+                if monto>lim_capital: monto = monto_ini
             else:
                 x = len(dinero)
                 capital = capital + monto*36
@@ -196,6 +200,7 @@ def docena(capital):
     monto = int(input("Ingrese apuesta inicial: "))
     t = 0
     numerosSalidos = []
+    monto_ini= monto
     docenax = []
     if rta == 1: 
         docenax=list(range(1,13))
@@ -221,6 +226,7 @@ def docena(capital):
                 capital = capital-monto
                 dinero.append(capital) #muestra lo q apuesta y gana hasta q se queda sin plata
                 numerosSalidos.append(n)
+                if monto>lim_capital: monto = monto_ini
         x = len(dinero)
         print("Termino su capital en: ", t)
         #print(dinero)
@@ -246,6 +252,7 @@ def docena(capital):
                 capital = capital-monto
                 dinero.append(capital) #muestrawd lo q apuesta y gana hasta q se queda sin plata
                 numerosSalidos.append(n)
+                if monto>lim_capital: monto = monto_ini
         x = len(dinero)
         #print(dinero)
         #print("Numeros salidos ", numerosSalidos)
