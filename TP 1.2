@@ -263,6 +263,7 @@ def docena(capital):
 
 
 print("Bienvenidos a la Ruleta")
+titulo= input('Titulo: ')
 seguir=int(input("1 jugar, 0 salir: "))
 while seguir ==1:
     capElegido =  int(input("Ingrese 1 si quiere jugar con capital finito o 2 si quiere jugar con capital infinito: "))
@@ -285,4 +286,5 @@ capitalIni=capital
 plt.legend(loc="lower right")
 plt.xlabel('N(Tiradas)')
 plt.ylabel('$(Dinero')
+plt.title(titulo)
 plt.show()
