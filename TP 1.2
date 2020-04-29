@@ -8,6 +8,7 @@ numeros_ruleta = list(range(0,37))
 lim_tiradas = 1000 #limite de tiradas p capital infinito, para por docena en cap finito y para funcion capital inicial
 monto_ini = 0
 lim_capital = monto_ini *10
+t_max = []
 
 
 
@@ -52,7 +53,8 @@ def martingala(capital):
                     dinero.append(capital)
                     numerosSalidos.append(n)
             x = len(dinero)
-            print("Termino su capital en la vuelta: ", t)
+            print("Termino su capital en la tirada: ", t)
+            t_max.append(t) #va guardando t que es la cantidad de tiradas
             x1 = range(0, x)
             plt.plot(x1, dinero , label="Martingala con capital: {0} - monto: {1}" .format(dinero[0], monto_ini))
             #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
@@ -76,7 +78,8 @@ def martingala(capital):
                     dinero.append(capital)
                     numerosSalidos.append(n)
             x = len(dinero)
-            print("Termino su capital en la vuelta: ", t)
+            print("Termino su capital en la tirada: ", t)
+            t_max.append(t) #va guardando t que es la cantidad de tiradas
             x1 = range(0, x)
             plt.plot(x1, dinero , label="Martingala con capital: {0} - monto: {1}" .format(dinero[0], monto_ini))
             #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
@@ -106,6 +109,8 @@ def martingala(capital):
                     numerosSalidos.append(n)
             x = len(dinero)
             x1 = range(0, x)
+            print("Termino su capital en la tirada: ", t)
+            t_max.append(t) #va guardando t que es la cantidad de tiradas
             plt.plot(x1, dinero , label="Martingala con monto: {0}" .format(monto_ini))
             #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
         
@@ -129,6 +134,8 @@ def martingala(capital):
                     numerosSalidos.append(n)
             x = len(dinero)
             x1 = range(0, x)
+            print("Termino su capital en la tirada: ", t)
+            t_max.append(t) #va guardando t que es la cantidad de tiradas
             plt.plot(x1, dinero , label="Martingala con monto: {0}" .format(monto_ini))
             #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
 
@@ -157,7 +164,8 @@ def mismoNumero(capital):
                 dinero.append(capital)
                 numerosSalidos.append(n)
         x = len(dinero)
-        print("Termino su capital en: ", t)
+        print("Termino su capital en la tirada: ", t)
+        t_max.append(t) #va guardando t que es la cantidad de tiradas
         x1 = range(0, x)
         plt.plot(x1, dinero , label="Mismo número con capital: {0} - monto: {1}" .format(dinero[0], monto_ini))
         #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
@@ -182,6 +190,8 @@ def mismoNumero(capital):
                 numerosSalidos.append(n)
         x = len(dinero)
         x1 = range(0, x)
+        print("Termino su capital en la tirada: ", t)
+        t_max.append(t) #va guardando t que es la cantidad de tiradas
         plt.plot(x1, dinero , label="Mismo número con monto: {0}" .format(monto_ini))
         #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
 
@@ -224,7 +234,8 @@ def docena(capital):
                 numerosSalidos.append(n)
                 if monto>lim_capital: monto = monto_ini
         x = len(dinero)
-        print("Termino su capital en: ", t)
+        print("Termino su capital en la tirada: ", t)
+        t_max.append(t) #va guardando t que es la cantidad de tiradas
         x1 = range(0, x)
         plt.plot(x1, dinero , label="Por docena con capital: {0} - monto: {1}" .format(dinero[0], monto_ini))
         #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
@@ -250,9 +261,9 @@ def docena(capital):
                 numerosSalidos.append(n)
                 if monto>lim_capital: monto = monto_ini
         x = len(dinero)
-        #print(dinero)
-        #print("Numeros salidos ", numerosSalidos)
         x1 = range(0, x)
+        print("Termino su capital en la tirada: ", t)
+        t_max.append(t) #va guardando t que es la cantidad de tiradas
         plt.plot(x1, dinero , label="Por docena con monto: {0}" .format(monto_ini))
         #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
 
@@ -275,10 +286,10 @@ while seguir ==1:
 
 capitalIni=capital
 
-#plt.xlim(0, lim_tiradas)
-#plt.ylim(-(lim_tiradas*2), (lim_tiradas*2))
-#x1 = range(0, (lim_tiradas+1))
-#plt.plot(x1, [capitalIni for i in x1]) # capital- poner esto tiene sentido para graficar con mismo capital en todas las jugadas
+t_max.sort()
+tirada_max = t_max.pop()
+x1 = range(0, tirada_max)
+plt.plot(x1, [capitalIni for i in x1]) # capital- poner esto tiene sentido para graficar con mismo capital en todas las jugadas
 plt.legend(loc="upper right")
 plt.xlabel('N(Tiradas)')
 plt.ylabel('$(Dinero)')
