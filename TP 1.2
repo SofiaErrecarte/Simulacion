@@ -205,8 +205,9 @@ def docena(capital):
 
     #CAPITAL FINITO
     if capital!=0:
+        porcentaje_calculado = monto_ini*100/capital #se calcula el porcentaje en base al monto y capital
         dinero.append(capital)  # capital inicial
-        while capital>=monto and t<=lim_tiradas: # para q no entre en loop
+        while capital>=monto : # and t<=lim_tiradas para q no entre en loop
             t = t + 1
             n = random.randint(0, 36)
             if n in docenax:
@@ -214,6 +215,8 @@ def docena(capital):
                 capital = capital + monto*2
                 dinero.append(capital)
                 numerosSalidos.append(n)
+                monto = monto +(monto*porcentaje_calculado) 
+                if monto>lim_capital: monto = monto_ini
             else:
                 x = len(dinero)
                 capital = capital-monto
@@ -228,6 +231,7 @@ def docena(capital):
         
     #CAPITAL INFINITO
     else:
+        porcentaje_calculado = 0.1 #forzamos el porcentaje ya q el capital es 0 (infinito)
         dinero.append(capital)  #iniciaria con 0, si no aca ponemos un numero grande
         for i in range(0,lim_tiradas):
             t = t + 1
@@ -237,6 +241,8 @@ def docena(capital):
                 capital = capital + monto*2
                 dinero.append(capital)
                 numerosSalidos.append(n)
+                monto = monto +(monto*porcentaje_calculado)
+                if monto>lim_capital: monto = monto_ini
             else:
                 x = len(dinero)
                 capital = capital-monto
