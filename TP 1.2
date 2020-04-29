@@ -48,15 +48,14 @@ def martingala(capital):
                     if monto>lim_capital: monto = monto_ini
                 else:
                     x = len(dinero)
-                    capital = capital + monto*1 #le pagan el doble
+                    capital = capital + monto*1 #le pagan monto*1
                     dinero.append(capital)
                     numerosSalidos.append(n)
             x = len(dinero)
             print("Termino su capital en la vuelta: ", t)
-            #print(dinero)
-            #print("Numeros salidos hasta que gano: ", numerosSalidos)
             x1 = range(0, x)
-            plt.plot(x1, dinero , label="Martingala con capital finito")
+            plt.plot(x1, dinero , label="Martingala con capital: {0} - monto: {1}" .format(dinero[0], monto_ini))
+            #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
 
         #PAR
         else:
@@ -73,15 +72,14 @@ def martingala(capital):
                     if monto>lim_capital: monto = monto_ini
                 else:
                     x = len(dinero)
-                    capital = capital + monto * 1  # le pagan el doble
+                    capital = capital + monto * 1  # le pagan monto *1
                     dinero.append(capital)
                     numerosSalidos.append(n)
             x = len(dinero)
             print("Termino su capital en la vuelta: ", t)
-            #print(dinero)
-            #print("Numeros salidos hasta que gano: ", numerosSalidos)
             x1 = range(0, x)
-            plt.plot(x1, dinero, label="Martingala con capital finito")
+            plt.plot(x1, dinero , label="Martingala con capital: {0} - monto: {1}" .format(dinero[0], monto_ini))
+            #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
 
 
     #CAPITAL INFINITO
@@ -103,14 +101,13 @@ def martingala(capital):
                     if monto>lim_capital: monto = monto_ini #en caso de q ese doble supere el limite, apuesta el monto inicial
                 else:
                     x = len(dinero)
-                    capital = capital + monto*1 #le pagan el doble
+                    capital = capital + monto*1 #le pagan monto*1
                     dinero.append(capital)
                     numerosSalidos.append(n)
             x = len(dinero)
-            #print(dinero)
-            #print("Numeros salidos: ", numerosSalidos)
             x1 = range(0, x)
-            plt.plot(x1, dinero , label="Martingala con capital Inifinto")
+            plt.plot(x1, dinero , label="Martingala con monto: {0}" .format(monto_ini))
+            #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
         
         #PAR
         else:
@@ -127,15 +124,13 @@ def martingala(capital):
                     if monto>lim_capital: monto = monto_ini #en caso de q ese doble supere el limite, apuesta el monto inicial
                 else:
                     x = len(dinero)
-                    capital = capital + monto * 1  # le pagan el doble
+                    capital = capital + monto * 1  # le pagan el monto*1
                     dinero.append(capital)
                     numerosSalidos.append(n)
             x = len(dinero)
-            #print(dinero)
-            #print("Numeros salidos: ", numerosSalidos)
             x1 = range(0, x)
-            plt.plot(x1, dinero, label="Martingala con capital Infinito")
-
+            plt.plot(x1, dinero , label="Martingala con monto: {0}" .format(monto_ini))
+            #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
 
 # MISMO NUMERO
 def mismoNumero(capital):
@@ -154,7 +149,7 @@ def mismoNumero(capital):
             if n != num:
                 x = len(dinero)
                 capital = capital-monto
-                dinero.append(capital) #muestr lo q apuesta y gana hasta q se queda sin plata
+                dinero.append(capital) #muestra lo q apuesta y gana hasta q se queda sin plata
                 numerosSalidos.append(n)
             else:
                 x = len(dinero)
@@ -163,10 +158,9 @@ def mismoNumero(capital):
                 numerosSalidos.append(n)
         x = len(dinero)
         print("Termino su capital en: ", t)
-        #print(dinero)
-        #print("Numeros salidos hasta que gano: ", numerosSalidos)
         x1 = range(0, x)
-        plt.plot(x1, dinero, label="Mismo numero con capital finito")
+        plt.plot(x1, dinero , label="Mismo número con capital: {0} - monto: {1}" .format(dinero[0], monto_ini))
+        #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
 
     #CAPITAL INFINITO
     else:
@@ -187,10 +181,9 @@ def mismoNumero(capital):
                 dinero.append(capital)
                 numerosSalidos.append(n)
         x = len(dinero)
-        #print(dinero)
-        #print("Numeros salidos: ", numerosSalidos)
         x1 = range(0, x)
-        plt.plot(x1, dinero, label="Mismo numero con capital Inifinito")
+        plt.plot(x1, dinero , label="Mismo número con monto: {0}" .format(monto_ini))
+        #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
 
 
 #POR DOCENA
@@ -229,11 +222,8 @@ def docena(capital):
                 if monto>lim_capital: monto = monto_ini
         x = len(dinero)
         print("Termino su capital en: ", t)
-        #print(dinero)
-        #print("Numeros salidos hasta que gano: ", numerosSalidos)
         x1 = range(0, x)
-        dinero_en_0 = dinero[0]
-        plt.plot(x1, dinero, label="Por docena con capital finito")
+        plt.plot(x1, dinero , label="Por docena con capital: {0} - monto: {1}" .format(dinero[0], monto_ini))
         #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
         
     #CAPITAL INFINITO
@@ -257,7 +247,7 @@ def docena(capital):
         #print(dinero)
         #print("Numeros salidos ", numerosSalidos)
         x1 = range(0, x)
-        plt.plot(x1, dinero, label="Por docena con capital infinito")
+        plt.plot(x1, dinero , label="Por docena con monto: {0}" .format(monto_ini))
         #plt.plot(x1, [dinero[0] for i in x1]) #capital- poner esto tiene sentido si hacemos grafica con distintos capitales
 
 
@@ -282,9 +272,9 @@ capitalIni=capital
 #plt.xlim(0, lim_tiradas)
 #plt.ylim(-(lim_tiradas*2), (lim_tiradas*2))
 #x1 = range(0, (lim_tiradas+1))
-#plt.plot(x1, [capitalIni for i in x1]) #capital
+#plt.plot(x1, [capitalIni for i in x1]) # capital- poner esto tiene sentido para graficar con mismo capital en todas las jugadas
 plt.legend(loc="upper right")
 plt.xlabel('N(Tiradas)')
-plt.ylabel('$(Dinero')
+plt.ylabel('$(Dinero)')
 plt.title(titulo)
 plt.show()
