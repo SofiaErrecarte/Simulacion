@@ -20,7 +20,7 @@ def middle_square ():
     semillas=[]
     numeros=[]
     t=1
-    seed= int(input("Ingrese una semillad de 4 numeros: "))
+    seed= int(input("Ingrese una semilla de 4 numeros: "))
     n= int(input("Ingrese cantidad de repeticiones: "))
     seed_ini=seed
     for i in range(1, n):   
@@ -30,6 +30,7 @@ def middle_square ():
         dig_x= len(str(numeros[t-1]))
         if dig_x != 8:
             new_seed = str(x).zfill(8) #valor de 8 digitos para generar la nueva semilla
+        else: new_seed=str(x)
         x_list=list(new_seed) #convierto a lista para extraer despues las posiciones q necesito
         for i in range(2,6): #0 1 2 3 4 5 6 7 8 - necesito las posiciones 2 3 4 5
             s+=x_list[i]
