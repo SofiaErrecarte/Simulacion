@@ -4,6 +4,11 @@ import matplotlib.pyplot as plt
 import statistics as stats
 import collections
 
+#Valores para probar:
+#middle_square: seed=1931 n=10 -> [3728761, 53100369, 1006009, 3600, 1296, 144, 1, 0, 0]
+#gcl: seed=5 a=7 c=9 mod=11 -> [0, 9, 6, 7, 3, 8, 10, 2, 1, 5]
+#     seed=7 a=1 c=7 mod=13 ->[1, 8, 2, 9, 3, 10, 4, 11, 5, 12, 6, 0, 7] 
+
 def menu():
     print("Menu: 0 para salir")
     print("1 - Middle Square") 
@@ -11,7 +16,7 @@ def menu():
     rta = int(input("Ingrese la opcion elegida: "))
     return rta
 
-def middle_square ():
+def middle_square ():   
     semillas=[]
     numeros=[]
     t=1
@@ -34,7 +39,7 @@ def middle_square ():
     x1 = range(1, n)
     plt.plot(x1, numeros, label="seed={0}, n={1}" .format(seed_ini, n))
 
-def gcl():
+def gcl():  
     x = int(input("Introduce el valor de la semilla: "))
     a = int(input("Introduce el valor del multiplicador a: "))
     c = int(input("Introduce el valor de la constante aditiva c: "))
