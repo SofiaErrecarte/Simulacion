@@ -4,32 +4,66 @@ import matplotlib.pyplot as plt
 import statistics as stats
 import collections
 
-def middle_square (seed,n):
+def menu():
+    print("Menu: 0 para salir")
+    print("1 - Middle Square") 
+    print("2 - Generador Congruencial")
+    rta = int(input("Ingrese la opcion elegida: "))
+    return rta
+
+def middle_square ():
     semillas=[]
     numeros=[]
     t=1
-    #print(seed)
+    seed= int(input("Ingrese una semillad de 4 numeros: "))
+    n= int(input("Ingrese cantidad de repeticiones: "))
+    seed_ini=seed
     for i in range(1, n):   
         s=[]
         x = seed * seed
-        #print(x)
         numeros.append(x)
-        #print (numeros)
         dig_x= len(str(numeros[t-1]))
-        #print(dig_x)
         if dig_x != 8:
-            new_seed = str(x).zfill(8)
-        x_list=list(new_seed)
-        #print(x_list)
-        for i in range(2,6):
-            s+=x_list[i]    
-        #print(s)
-        seed = int(''.join(s))
+            new_seed = str(x).zfill(8) #valor de 8 digitos para generar la nueva semilla
+        x_list=list(new_seed) #convierto a lista para extraer despues las posiciones q necesito
+        for i in range(2,6): #0 1 2 3 4 5 6 7 8 - necesito las posiciones 2 3 4 5
+            s+=x_list[i]
+        seed = int(''.join(s)) #paso lista a numero
         semillas.append(seed) 
     print(numeros,semillas)
+    x1 = range(1, n)
+    plt.plot(x1, numeros, label="seed={0}, n={1}" .format(seed_ini, n))
 
-seed= int(input("Ingrese una semillad de 4 numeros: "))
-n= int(input("Ingrese cantidad de repeticiones: "))
-middle_square(seed, n) 
+def gcl():
+    x = int(input("Introduce el valor de la semilla: "))
+    a = int(input("Introduce el valor del multiplicador a: "))
+    c = int(input("Introduce el valor de la constante aditiva c: "))
+    mod = int(input("Introduce el valor del modulo m: "))
+    periodo = 0
+    bandera = 0
+    numeros = []
+    while(bandera != x): #el codigo se ejecuta hasta que vuelve a generarse la semilla inicialmente ingresada
+        if (periodo == 0): #en la primer vuelta asigno que la bandera será x(la semilla ingresada). no puedo asignarlo antes del while porque de ese modo nunca entraria
+            bandera = x
+        x = (a * x + c) % mod #calculo nueva semilla
+        numeros.append(x)
+        periodo = periodo + 1 #voy contando las vueltas
 
+    print(numeros)
+    x1 = range(0, periodo)
+    plt.plot(x1, numeros, label="seed={0}, a={1}, c={2}, mod={3}" .format(bandera, a, c, mod))
+    if(periodo == mod): print("El periodo es completo: ", periodo)
+    else: print("El periodo es incompleto:", periodo)
 
+print('Bienvenido al generador de números pseudoaleatorios')
+seguir=int(input("1 ejecutar, 0 salir: "))
+while seguir==1:
+    rta = menu()
+    if rta == 1: middle_square()
+    elif rta == 2: gcl()
+    seguir = int(input("1 ejecutar, 0 salir: "))
+plt.legend(loc="upper right")
+plt.xlabel('Período')
+plt.ylabel('N° Pseudoaleatorios')
+plt.title('Generadores de N° Pseudoaleatorios')
+plt.show()
