@@ -50,7 +50,7 @@ def prueba_ks(numeros):
     print("Números obtenidos en el generador: \n")
     print(numeros)
     if n<50: 
-        d_ks= int(input("Ingrese el valor de la tabla:")) #tengo que ingresar el valor de la tabla
+        d_ks= float(input("Ingrese el valor de la tabla:")) #tengo que ingresar el valor de la tabla
     else:  
         d_ks=1.36/math.sqrt(n) #grado de confianza de 95%-- valor sacado de la tabla
     #print(d_ks)
