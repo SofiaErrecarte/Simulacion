@@ -40,6 +40,43 @@ def middle_square ():
     x1 = range(1, n)
     plt.plot(x1, numeros, label="seed={0}, n={1}" .format(seed_ini, n))
 
+def prueba_ks(numeros):
+    print("Datos de la prueba Kolmogorov-Smirnov \n")
+    n=len(numeros)
+    #print(n)
+    for i in range(0,n):
+        numeros[i]=numeros[i]/100 #divido todos por 100 porque sino no puedo comparar con las frecuencias
+    numeros.sort()
+    print("Números obtenidos en el generador: \n")
+    print(numeros)
+    if n<50: 
+        d_ks= int(input("Ingrese el valor de la tabla:")) #tengo que ingresar el valor de la tabla
+    else:  
+        d_ks=1.36/math.sqrt(n) #grado de confianza de 95%-- valor sacado de la tabla
+    #print(d_ks)
+    d_mas = []
+    #D +
+    for i in range(1,n):
+        valor=(i/n)-numeros[i]
+        d_mas.append(valor)
+    #D -
+    d_menos=[]
+    for i in range (1,n):
+        valor=numeros[i-1]-(((i-1)-1)/n)
+        d_menos.append(valor)
+    d1= max([num for num in d_mas]) #busco los numeros mayores de cada lista d 
+    print("D- : ")
+    print(d1)
+    d2= max([num for num in d_menos])
+    print("\nD- : ")
+    print(d2)
+    if d1>d2: d=d1 
+    else: d=d2
+    #print(d)
+    print("D = {}".format(d))
+    if d>d_ks: print("No sigue una distribucion uniforme")
+    else : print("Sigue una distribucion uniforme")
+
 def gcl():  
     x = int(input("Introduce el valor de la semilla: "))
     a = int(input("Introduce el valor del multiplicador a: "))
@@ -60,6 +97,10 @@ def gcl():
     plt.plot(x1, numeros, label="seed={0}, a={1}, c={2}, mod={3}" .format(bandera, a, c, mod))
     if(periodo == mod): print("El periodo es completo: ", periodo)
     else: print("El periodo es incompleto:", periodo)
+    prueba_ks(numeros)
+    
+
+
 
 print('Bienvenido al generador de números pseudoaleatorios')
 seguir=int(input("1 ejecutar, 0 salir: "))
