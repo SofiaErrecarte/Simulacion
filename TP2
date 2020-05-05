@@ -65,11 +65,9 @@ def prueba_ks(numeros):
         valor=numeros[i-1]-(((i-1)-1)/n)
         d_menos.append(valor)
     d1= max([num for num in d_mas]) #busco los numeros mayores de cada lista d 
-    print("D- : ")
-    print(d1)
+    print("D+ :",d1)
     d2= max([num for num in d_menos])
-    print("\nD- : ")
-    print(d2)
+    print("D- :",d1)
     if d1>d2: d=d1 
     else: d=d2
     #print(d)
