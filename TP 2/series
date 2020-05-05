@@ -22,13 +22,21 @@ def prueba_series(numeros):
                     # sumamos 1 a la frecuencia de esos rangos
                     freqs[i - 1][j - 1] += 1   #resta 1 adentro porq recuenden q arrancaba el for en 1 y no en cero para q no de negativo
     print("frecuencias: ", freqs)
-    
+    frec_esperada= (long-1)/10
 
     # χ2 = k/n * Σ(fj - n/k)^2
+    acum=0
+    for row in freqs:
+        for i in row:
+           acum+= (i - frec_esperada) ** 2
+    chi2= acum * (1/ frec_esperada)
+    print("chi2: ", chi2)
 
-    chi2 = ((k ** 2) / long) * sum([sum((i - (long / (k**2))) ** 2 for i in row) for row in freqs])
 
-    print("chi2 = " + str(chi2))
+  #  chi2=  (1/ frec_esperada) * sum([( sum((i - frec_esperada)**2)  for i in row) for row in freqs])
+#    chi2 = ((k ** 2) / long) * sum([sum((i - (long / (k**2))) ** 2 for i in row) for row in freqs])
+
+    #print("chi2 = " + str(chi2))
     grad_libertad = k - 1
     alfa = 0.05
     chi_tabla = 16.92
