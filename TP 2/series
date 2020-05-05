@@ -1,5 +1,5 @@
 def prueba_series(numeros):
-    from random import randint
+  
 
     long = len(numeros)
     k = 10   #va a haber 10 rangos : (0;0,1), (0,1;0,2), etc etc
