@@ -1,0 +1,38 @@
+def prueba_series(numeros):
+    from random import randint
+
+    long = len(numeros)
+    k = 10   #va a haber 10 rangos : (0;0,1), (0,1;0,2), etc etc
+    for i in range(0,long):
+        numeros[i]= numeros[i]/long
+
+    # Creo el array bidimensional de las celdas con sus frecuencias
+    freqs =  [[0 for i in range(k)] for i in range(k)]
+
+    # Para cada par de rangos (i,j)
+    for i in range(1, k + 1): #arranca desde 1 porque sino en la primer corrida daria negativo minI
+        maxI = i / k
+        minI = maxI - (1 / k)
+        for j in range(1, k + 1):
+            maxJ = j / k
+            minJ = maxJ - (1 / k)
+            for n in range(0,(long-1)):
+                if numeros[n] < maxI and numeros[n] >= minI and numeros[(n+1)] < maxJ and numeros[(n+1)] >= minJ:
+                    # Si el primer elemento esta en el rango i, y el segundo en el j,
+                    # sumamos 1 a la frecuencia de esos rangos
+                    freqs[i - 1][j - 1] += 1   #resta 1 adentro porq recuenden q arrancaba el for en 1 y no en cero para q no de negativo
+    print("frecuencias: ", freqs)
+    
+
+    # χ2 = k/n * Σ(fj - n/k)^2
+
+    chi2 = ((k ** 2) / long) * sum([sum((i - (long / (k**2))) ** 2 for i in row) for row in freqs])
+
+    print("chi2 = " + str(chi2))
+    grad_libertad = k - 1
+    alfa = 0.05
+    chi_tabla = 16.92
+    if (chi2 < chi_tabla):
+        print('La hipótesis nula es aceptada. La distribución es uniforme')
+    else:
+        print('La hipótesis nula no es aceptada. La distribución no es uniforme')
