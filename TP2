@@ -16,6 +16,14 @@ def menu():
     rta = int(input("Ingrese la opcion elegida: "))
     return rta
 
+def menu2():
+    print("Pruebas de aleatoriedad:")
+    print("1- Kolmogorov Smirnov")
+    print("2- Chi-cuadrado")
+    print("3-Pruebas de Series")
+    rta2=int(input("Ingrese opcion deseada"))
+    return rta2
+
 def middle_square ():   
     semillas=[]
     numeros=[]
@@ -75,6 +83,56 @@ def prueba_ks(numeros):
     if d>d_ks: print("No sigue una distribucion uniforme segun la prueba Kolmogorov Smirnov")
     else : print("Sigue una distribucion uniforme segun la prueba Kolmogorov Smirnov")
 
+
+def prueba_series(mod,numeros):
+    long = len(numeros)
+    #print("longitud", long)
+    k = 10   #va a haber 10 rangos
+    for i in range(0,long):
+        numeros[i]= numeros[i]/mod
+    #print ("numeros:",numeros)
+
+    # Crear el array bidimensional de las celdas con sus frecuencias
+    freqs =  [[0 for i in range(k)] for i in range(k)]
+    frec_intervalos=[]
+    # Para cada par de rangos (i,j)
+    for i in range(1, k + 1):
+        maxI = i / k
+        minI = maxI - (1 / k)
+        for j in range(1, k + 1):
+            maxJ = j / k
+            minJ = maxJ - (1 / k)
+            for n in range(0,(long-1)):
+                if numeros[n] < maxI and numeros[n] >= minI and numeros[(n+1)] < maxJ and numeros[(n+1)] >= minJ:
+                    # Si el primer elemento esta en el rango i, y el segundo en el j,
+                    # sumamos 1 a la frecuencia de esos rangos
+                    freqs[i - 1][j - 1] += 1
+
+    #print("frecuencias: ", freqs)
+    frec_esperada= (long-1)/10
+
+    for i in range(0,10):
+        cont = 0
+        for j in range(0,10):
+            cont = cont +  freqs[i][j]
+        frec_intervalos.append(cont)
+    print("Frecuencia observada en cada intervalo: ",frec_intervalos)
+
+    # χ2 = k/n * Σ(fj - n/k)^2
+    acum=0
+    for i in frec_intervalos:
+        acum+= (i - frec_esperada) ** 2
+
+    #print(acum)
+    chi2= acum * (1/ frec_esperada)
+    #print("chi2: ", chi2)
+
+    chi_tabla = 16.92
+    if (chi2 < chi_tabla):
+        print('Los numeros son independientes.')
+    else:
+        print('Los números no son independientes.')
+
 def gcl():  
     x = int(input("Introduce el valor de la semilla: "))
     a = int(input("Introduce el valor del multiplicador a: "))
@@ -95,9 +153,10 @@ def gcl():
     plt.plot(x1, numeros, label="seed={0}, a={1}, c={2}, mod={3}" .format(bandera, a, c, mod))
     if(periodo == mod): print("El periodo es completo: ", periodo)
     else: print("El periodo es incompleto:", periodo)
-    prueba_ks(numeros)
-    
-
+    rta2= menu2()
+    if(rta2==1): prueba_ks(numeros)
+    elif (rta2==3): prueba_series(mod, numeros)
+    #AGREGAR EL DE LOLA Y CERO PARA SALIR
 
 
 print('Bienvenido al generador de números pseudoaleatorios')
