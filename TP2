@@ -57,7 +57,7 @@ def prueba_ks(numeros):
         numerosAux1.append(numeros[i]/n) #divido todos por la cantidad de numeros
     numerosAux1.sort() #no tiene sentido pero es un paso de la prueba
     print("Números obtenidos en el generador: \n")
-    print(numeros)
+    print(numerosAux1)
     if n<50: 
         d_ks= float(input("Ingrese el valor de la tabla:")) #tengo que ingresar el valor de la tabla
     else:  
