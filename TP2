@@ -21,7 +21,7 @@ def menu2():
     print("1- Kolmogorov Smirnov")
     print("2- Chi-cuadrado")
     print("3-Pruebas de Series")
-    rta2=int(input("Ingrese opcion deseada"))
+    rta2=int(input("Ingrese opcion deseada: "))
     return rta2
 
 def middle_square ():   
@@ -51,10 +51,11 @@ def middle_square ():
 def prueba_ks(numeros):
     print("Datos de la prueba Kolmogorov-Smirnov \n")
     n=len(numeros)
+    numerosAux1=[]
     #print(n)
     for i in range(0,n):
-        numeros[i] = numeros[i]/n #divido todos por la cantidad de numeros
-    numeros.sort() #no tiene sentido pero es un paso de la prueba
+        numerosAux1.append(numeros[i]/n) #divido todos por la cantidad de numeros
+    numerosAux1.sort() #no tiene sentido pero es un paso de la prueba
     print("Números obtenidos en el generador: \n")
     print(numeros)
     if n<50: 
@@ -65,12 +66,12 @@ def prueba_ks(numeros):
     d_mas = []
     #D +
     for i in range(1,n):
-        valor=(i/n)-numeros[i-1]
+        valor=(i/n)-numerosAux1[i-1]
         d_mas.append(valor)
     #D -
     d_menos=[]
     for i in range (1,n):
-        valor=numeros[i-1]-(((i-1)-1)/n)
+        valor=numerosAux1[i-1]-(((i-1)-1)/n)
         d_menos.append(valor)
     d1= max([num for num in d_mas]) #busco los numeros mayores de cada lista d 
     print("D- :",d1)
@@ -86,10 +87,11 @@ def prueba_ks(numeros):
 
 def prueba_series(mod,numeros):
     long = len(numeros)
+    numerosAux2=[]
     #print("longitud", long)
     k = 10   #va a haber 10 rangos
     for i in range(0,long):
-        numeros[i]= numeros[i]/mod
+        numerosAux2.append(numeros[i]/mod)
     #print ("numeros:",numeros)
 
     # Crear el array bidimensional de las celdas con sus frecuencias
@@ -103,7 +105,7 @@ def prueba_series(mod,numeros):
             maxJ = j / k
             minJ = maxJ - (1 / k)
             for n in range(0,(long-1)):
-                if numeros[n] < maxI and numeros[n] >= minI and numeros[(n+1)] < maxJ and numeros[(n+1)] >= minJ:
+                if numerosAux2[n] < maxI and numerosAux2[n] >= minI and numerosAux2[(n+1)] < maxJ and numerosAux2[(n+1)] >= minJ:
                     # Si el primer elemento esta en el rango i, y el segundo en el j,
                     # sumamos 1 a la frecuencia de esos rangos
                     freqs[i - 1][j - 1] += 1
@@ -137,11 +139,12 @@ def prueba_series(mod,numeros):
 def chiCuadrado(numeros):                           
     n=len(numeros)
     print('n:', n)
+    numerosAux3=[]
     k=10 #hacemos 10 rangos siempre 
     #divido todos por la longitud del arreglo
     for i in range(0,n):
-        numeros[i]=numeros[i]/n
-    print(numeros)
+        numerosAux3.append(numeros[i]/n)
+    print(numerosAux3)
     #Calculamos frecuencias absolutas
     
     freqs = [0 for i in range(k)]
@@ -149,7 +152,7 @@ def chiCuadrado(numeros):
     for i in range(1,k+1):
         max = i/k
         min = max - (1/k)
-        for xi in numeros:
+        for xi in numerosAux3:
             if xi < max and xi >= min:
                 #Si el numero esta en el rango, sumamos 1 a la frecuencia de ese rango
                 freqs[i-1]+=1
@@ -167,7 +170,7 @@ def chiCuadrado(numeros):
     
     
     fig, ax=plt.subplots()
-    ax.scatter(numeros, numeros)
+    ax.scatter(numerosAux3, numerosAux3)
     plt.show()
 
 def gcl():  
@@ -190,11 +193,14 @@ def gcl():
     plt.plot(x1, numeros, label="seed={0}, a={1}, c={2}, mod={3}" .format(bandera, a, c, mod))
     if(periodo == mod): print("El periodo es completo: ", periodo)
     else: print("El periodo es incompleto:", periodo)
-    rta2= menu2()
-    if(rta2==1): prueba_ks(numeros)
-    elif (rta2==2): chiCuadrado(numeros)
-    elif (rta2==3): prueba_series(mod, numeros)
-    #AGREGAR EL DE LOLA Y CERO PARA SALIR
+    
+    continuar=1
+    while continuar==1:
+        rta2= menu2()
+        if(rta2==1): prueba_ks(numeros)
+        elif (rta2==2): chiCuadrado(numeros)
+        elif (rta2==3): prueba_series(mod, numeros)
+        continuar=int(input('Realizar otra prueba: 1 SI // 0 NO : '))
 
 
 print('Bienvenido al generador de números pseudoaleatorios')
@@ -208,4 +214,4 @@ plt.legend(loc="upper right")
 plt.xlabel('Período')
 plt.ylabel('N° Pseudoaleatorios')
 plt.title('Generadores de N° Pseudoaleatorios')
-plt.show()
+#plt.show()
