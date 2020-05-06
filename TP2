@@ -132,6 +132,43 @@ def prueba_series(mod,numeros):
         print('Los numeros son independientes.')
     else:
         print('Los números no son independientes.')
+    
+    
+def chiCuadrado(numeros):                           
+    n=len(numeros)
+    print('n:', n)
+    k=10 #hacemos 10 rangos siempre 
+    #divido todos por la longitud del arreglo
+    for i in range(0,n):
+        numeros[i]=numeros[i]/n
+    print(numeros)
+    #Calculamos frecuencias absolutas
+    
+    freqs = [0 for i in range(k)]
+    #Para cada rango
+    for i in range(1,k+1):
+        max = i/k
+        min = max - (1/k)
+        for xi in numeros:
+            if xi < max and xi >= min:
+                #Si el numero esta en el rango, sumamos 1 a la frecuencia de ese rango
+                freqs[i-1]+=1
+    print('frecuencias: ',freqs)
+    
+    Ei=n/k #totalDatos/totalIntervalos
+    #χ2 = 1/Ei * Σ(Oi - Ei)^2
+    chi2 = (1/Ei) * sum ( [ (Oi-(Ei)) **2 for Oi in freqs ] )
+    print('chi: ', chi2)
+    
+    #alfa=0.05 95% grados de libertad=k-1
+    chi_tabla=16.92 #no encuentro en ningun lado como calcularlo sin tabla tabla chi con alfa=0.05 y v=9
+    if (chi2<chi_tabla): print('La hipótesis nula es aceptada. La distribución es uniforme')
+    else: print('La hipótesis nula no es aceptada. La distribución no es uniforme')
+    
+    
+    fig, ax=plt.subplots()
+    ax.scatter(numeros, numeros)
+    plt.show()
 
 def gcl():  
     x = int(input("Introduce el valor de la semilla: "))
@@ -155,6 +192,7 @@ def gcl():
     else: print("El periodo es incompleto:", periodo)
     rta2= menu2()
     if(rta2==1): prueba_ks(numeros)
+    elif (rta2==2): chiCuadrado(numeros)
     elif (rta2==3): prueba_series(mod, numeros)
     #AGREGAR EL DE LOLA Y CERO PARA SALIR
 
