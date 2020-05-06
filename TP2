@@ -131,9 +131,9 @@ def prueba_series(mod,numeros):
 
     chi_tabla = 16.92
     if (chi2 < chi_tabla):
-        print('Los numeros son independientes.')
+        print('Los numeros son independientes segun la prueba de Series.')
     else:
-        print('Los números no son independientes.')
+        print('Los números no son independientes segun la prueba de Series.')
     
     
 def chiCuadrado(numeros):                           
@@ -165,8 +165,8 @@ def chiCuadrado(numeros):
     
     #alfa=0.05 95% grados de libertad=k-1
     chi_tabla=16.92 #no encuentro en ningun lado como calcularlo sin tabla tabla chi con alfa=0.05 y v=9
-    if (chi2<chi_tabla): print('La hipótesis nula es aceptada. La distribución es uniforme')
-    else: print('La hipótesis nula no es aceptada. La distribución no es uniforme')
+    if (chi2<chi_tabla): print('La hipótesis nula es aceptada. La distribución es uniforme segun prueba de Chi-Cuadrado')
+    else: print('La hipótesis nula no es aceptada. La distribución no es uniforme segun prueba de Chi-Cuadrado')
     
     
     fig, ax=plt.subplots()
