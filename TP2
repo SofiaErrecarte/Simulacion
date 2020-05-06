@@ -49,15 +49,15 @@ def middle_square ():
     plt.plot(x1, numeros, label="seed={0}, n={1}" .format(seed_ini, n))
 
 def prueba_ks(numeros):
-    print("Datos de la prueba Kolmogorov-Smirnov \n")
+    print("\nDatos de la prueba Kolmogorov-Smirnov ")
     n=len(numeros)
     numerosAux1=[]
     #print(n)
     for i in range(0,n):
         numerosAux1.append(numeros[i]/n) #divido todos por la cantidad de numeros
     numerosAux1.sort() #no tiene sentido pero es un paso de la prueba
-    print("Números obtenidos en el generador: \n")
-    print(numerosAux1)
+    #print("Números obtenidos en el generador: \n")
+    #print(numerosAux1)
     if n<50: 
         d_ks= float(input("Ingrese el valor de la tabla:")) #tengo que ingresar el valor de la tabla
     else:  
@@ -74,13 +74,13 @@ def prueba_ks(numeros):
         valor=numerosAux1[i-1]-(((i-1)-1)/n)
         d_menos.append(valor)
     d1= max([num for num in d_mas]) #busco los numeros mayores de cada lista d 
-    print("D- :",d1)
+    print("D+ :",d1)
     d2= max([num for num in d_menos])
     print("D- : ",d2)
     if d1>d2: d=d1 
     else: d=d2
     #print(d)
-    print("\nD = {}".format(d))
+    print("D = {}\n".format(d))
     if d>d_ks: print("No sigue una distribucion uniforme segun la prueba Kolmogorov Smirnov")
     else : print("Sigue una distribucion uniforme segun la prueba Kolmogorov Smirnov")
 
