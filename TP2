@@ -1,6 +1,7 @@
 import random 
 import math 
 import matplotlib.pyplot as plt
+from scipy.stats import chi2
 import statistics as stats
 import collections
 
@@ -20,7 +21,8 @@ def menu2():
     print("Pruebas de aleatoriedad:")
     print("1- Kolmogorov Smirnov")
     print("2- Chi-cuadrado")
-    print("3-Pruebas de Series")
+    print("3- Pruebas de Series")
+    print("4- Prueba de Huecos")
     rta2=int(input("Ingrese opcion deseada: "))
     return rta2
 
@@ -49,7 +51,7 @@ def middle_square ():
     plt.plot(x1, numeros, label="seed={0}, n={1}" .format(seed_ini, n))
 
 def prueba_ks(numeros):
-    print("\nDatos de la prueba Kolmogorov-Smirnov ")
+    print("\nDatos de la prueba Kolmogorov-Smirnov \n")
     n=len(numeros)
     numerosAux1=[]
     #print(n)
@@ -81,9 +83,8 @@ def prueba_ks(numeros):
     else: d=d2
     #print(d)
     print("D = {}\n".format(d))
-    if d>d_ks: print("No sigue una distribucion uniforme segun la prueba Kolmogorov Smirnov")
-    else : print("Sigue una distribucion uniforme segun la prueba Kolmogorov Smirnov")
-
+    if d>d_ks: print("No sigue una distribucion uniforme según la prueba Kolmogorov Smirnov")
+    else : print("Sigue una distribucion uniforme según la prueba Kolmogorov Smirnov")
 
 def prueba_series(mod,numeros):
     long = len(numeros)
@@ -131,10 +132,9 @@ def prueba_series(mod,numeros):
 
     chi_tabla = 16.92
     if (chi2 < chi_tabla):
-        print('Los numeros son independientes segun la prueba de Series.')
+        print('Los numeros son independientes según la prueba de Series.')
     else:
-        print('Los números no son independientes segun la prueba de Series.')
-    
+        print('Los números no son independientes según la prueba de Series.')
     
 def chiCuadrado(numeros):                           
     n=len(numeros)
@@ -159,19 +159,81 @@ def chiCuadrado(numeros):
     print('frecuencias: ',freqs)
     
     Ei=n/k #totalDatos/totalIntervalos
+    print('F esperada:', Ei)
     #χ2 = 1/Ei * Σ(Oi - Ei)^2
     chi2 = (1/Ei) * sum ( [ (Oi-(Ei)) **2 for Oi in freqs ] )
     print('chi: ', chi2)
     
     #alfa=0.05 95% grados de libertad=k-1
     chi_tabla=16.92 #no encuentro en ningun lado como calcularlo sin tabla tabla chi con alfa=0.05 y v=9
-    if (chi2<chi_tabla): print('La hipótesis nula es aceptada. La distribución es uniforme segun prueba de Chi-Cuadrado')
-    else: print('La hipótesis nula no es aceptada. La distribución no es uniforme segun prueba de Chi-Cuadrado')
+    if (chi2<chi_tabla): print('La hipótesis nula es aceptada. La distribución es uniforme según prueba de Chi-Cuadrado')
+    else: print('La hipótesis nula no es aceptada. La distribución no es uniforme según prueba de Chi-Cuadrado')
     
     
     fig, ax=plt.subplots()
     ax.scatter(numerosAux3, numerosAux3)
     plt.show()
+
+
+def espera(numeros):
+    n=len(numeros)
+    numerosAux4=[]
+    for i in range(0,n):
+        numerosAux4.append(numeros[i]/n)
+    print(numerosAux4)
+    _i = 0 # extremo inferior subintervalo, >= 0
+    _s = 0.5 # extremo superior subintervalo, <= 1
+    _psi = _s - _i # calculo probabilidad del subintervalo
+    
+    # cálculo de posiciones donde hay números perteneciente al subintervalo seleccionado
+    _pos = []
+    for i in numerosAux4:
+        if (i >= _i and i < _s):
+            _pos.append(1)
+        else:
+            _pos.append(0)
+    print(_pos)
+
+    # cálculo de la longitud de cada hueco
+    _tesp = []
+    _c = 0
+    for i in _pos:
+        if i==1:
+            _tesp.append(_c) #cada vez que vuelve a haber un 1 agrega el contador que fue contando los 0
+            _c = 0 #siempre se vuelve a reiniciar en 0
+        else: #i==0
+            _c += 1
+    print(_tesp)
+
+    _ch = max(_tesp) #+ 1 # cantidad de huecos
+    if (_ch > 10): #definimos un tama;o de hueco max, en este caso 10, siempre que haya uno > a 10 se considera que es tama;o 10
+        _ch = 10
+    print(_ch)
+
+    # cálculo de la frecuencia observada
+    _fO = []
+    for i in range(_ch+1):
+        if (i == 10): #9
+            _fO.append(sum(n >= 10 for n in _tesp))
+        else:
+            _fO.append(_tesp.count(i))
+    print(_fO)
+
+    # cálculo de la frecuencia esperada
+    _fE = []
+    for i in range(_ch):
+        _fE.append((1 - _psi)**i * _psi * sum(_fO))
+
+    # cálculo del estadístico
+    chi2calc = 0
+    for i in range(_ch):
+        chi2calc += (_fO[i] - _fE[i])**2 / _fE[i]
+    print(chi2calc)
+
+    chi_tabla=chi2.isf(0.05, _ch - 1)
+    if (chi2calc<chi_tabla): print('La hipótesis nula es aceptada. Los números son independientes según prueba de Huecos')
+    else: print('La hipótesis nula no es aceptada. Los números no son independientes según prueba de Huecos')
+
 
 def gcl():  
     x = int(input("Introduce el valor de la semilla: "))
@@ -200,6 +262,7 @@ def gcl():
         if(rta2==1): prueba_ks(numeros)
         elif (rta2==2): chiCuadrado(numeros)
         elif (rta2==3): prueba_series(mod, numeros)
+        elif (rta2==4): espera(numeros)
         continuar=int(input('Realizar otra prueba: 1 SI // 0 NO : '))
 
 
