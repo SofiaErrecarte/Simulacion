@@ -127,11 +127,11 @@ def prueba_series(mod,numeros):
         acum+= (i - frec_esperada) ** 2
 
     #print(acum)
-    chi2= acum * (1/ frec_esperada)
+    chi2calc= acum * (1/ frec_esperada)
     #print("chi2: ", chi2)
 
-    chi_tabla = 16.92
-    if (chi2 < chi_tabla):
+    chi_tabla=chi2.isf(0.05, k - 1)
+    if (chi2calc < chi_tabla):
         print('Los numeros son independientes según la prueba de Series.')
     else:
         print('Los números no son independientes según la prueba de Series.')
@@ -161,19 +161,18 @@ def chiCuadrado(numeros):
     Ei=n/k #totalDatos/totalIntervalos
     print('F esperada:', Ei)
     #χ2 = 1/Ei * Σ(Oi - Ei)^2
-    chi2 = (1/Ei) * sum ( [ (Oi-(Ei)) **2 for Oi in freqs ] )
-    print('chi: ', chi2)
+    chi2calc = (1/Ei) * sum ( [ (Oi-(Ei)) **2 for Oi in freqs ] )
+    print('chi: ', chi2calc)
     
     #alfa=0.05 95% grados de libertad=k-1
-    chi_tabla=16.92 #no encuentro en ningun lado como calcularlo sin tabla tabla chi con alfa=0.05 y v=9
-    if (chi2<chi_tabla): print('La hipótesis nula es aceptada. La distribución es uniforme según prueba de Chi-Cuadrado')
+    chi_tabla=chi2.isf(0.05, k - 1)
+    if (chi2calc<chi_tabla): print('La hipótesis nula es aceptada. La distribución es uniforme según prueba de Chi-Cuadrado')
     else: print('La hipótesis nula no es aceptada. La distribución no es uniforme según prueba de Chi-Cuadrado')
     
     
     fig, ax=plt.subplots()
     ax.scatter(numerosAux3, numerosAux3)
     plt.show()
-
 
 def espera(numeros):
     n=len(numeros)
