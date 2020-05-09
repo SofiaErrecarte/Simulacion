@@ -236,7 +236,7 @@ def gcl():
     #directamente divido acá asi ya paso el arreglo entre 0 y 1
     n=len(numeros)
     for i in range(0,n):
-        numeros.append(numeros[i]/n)
+         numeros[i] = (numeros[i]/n)
     print(numeros)
     
     
