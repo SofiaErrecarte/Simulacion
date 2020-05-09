@@ -53,10 +53,7 @@ def middle_square ():
 def prueba_ks(numeros):
     print("\nDatos de la prueba Kolmogorov-Smirnov \n")
     n=len(numeros)
-    numerosAux1=[]
-    #print(n)
-    for i in range(0,n):
-        numerosAux1.append(numeros[i]/n) #divido todos por la cantidad de numeros
+    numerosAux1=numeros
     numerosAux1.sort() #no tiene sentido pero es un paso de la prueba
     #print("Números obtenidos en el generador: \n")
     #print(numerosAux1)
@@ -86,14 +83,11 @@ def prueba_ks(numeros):
     if d>d_ks: print("No sigue una distribucion uniforme según la prueba Kolmogorov Smirnov")
     else : print("Sigue una distribucion uniforme según la prueba Kolmogorov Smirnov")
 
-def prueba_series(mod,numeros):
+def prueba_series(numeros):
     long = len(numeros)
-    numerosAux2=[]
-    #print("longitud", long)
+    numerosAux2=numeros
     k = 10   #va a haber 10 rangos
-    for i in range(0,long):
-        numerosAux2.append(numeros[i]/mod)
-    #print ("numeros:",numeros)
+
 
     # Crear el array bidimensional de las celdas con sus frecuencias
     freqs =  [[0 for i in range(k)] for i in range(k)]
@@ -137,9 +131,7 @@ def prueba_series(mod,numeros):
         print('Los números no son independientes según la prueba de Series.')
     
 def chiCuadrado(numeros):                           
-    n=len(numeros)
-    print('n:', n)
-    numerosAux3=[]
+    numerosAux3=numeros
     k=10 #hacemos 10 rangos siempre 
     #divido todos por la longitud del arreglo
     for i in range(0,n):
@@ -169,17 +161,9 @@ def chiCuadrado(numeros):
     if (chi2calc<chi_tabla): print('La hipótesis nula es aceptada. La distribución es uniforme según prueba de Chi-Cuadrado')
     else: print('La hipótesis nula no es aceptada. La distribución no es uniforme según prueba de Chi-Cuadrado')
     
-    
-    fig, ax=plt.subplots()
-    ax.scatter(numerosAux3, numerosAux3)
-    plt.show()
 
 def espera(numeros):
-    n=len(numeros)
-    numerosAux4=[]
-    for i in range(0,n):
-        numerosAux4.append(numeros[i]/n)
-    print(numerosAux4)
+    numerosAux4=numeros
     _i = 0 # extremo inferior subintervalo, >= 0
     _s = 0.5 # extremo superior subintervalo, <= 1
     _psi = _s - _i # calculo probabilidad del subintervalo
@@ -248,12 +232,24 @@ def gcl():
         x = (a * x + c) % mod #calculo nueva semilla
         numeros.append(x)
         periodo = periodo + 1 #voy contando las vueltas
-
+    
+    #directamente divido acá asi ya paso el arreglo entre 0 y 1
+    n=len(numeros)
+    for i in range(0,n):
+        numeros.append(numeros[i]/n)
     print(numeros)
+    
+    
+    #grafico general
     x1 = range(0, periodo)
     plt.plot(x1, numeros, label="seed={0}, a={1}, c={2}, mod={3}" .format(bandera, a, c, mod))
     if(periodo == mod): print("El periodo es completo: ", periodo)
     else: print("El periodo es incompleto:", periodo)
+    plt.legend(loc="upper right")
+    plt.xlabel('Período')
+    plt.ylabel('N° Pseudoaleatorios')
+    plt.title('Generadores de N° Pseudoaleatorios')
+    
     
     continuar=1
     while continuar==1:
@@ -272,8 +268,6 @@ while seguir==1:
     if rta == 1: middle_square()
     elif rta == 2: gcl()
     seguir = int(input("1 ejecutar, 0 salir: "))
-plt.legend(loc="upper right")
-plt.xlabel('Período')
-plt.ylabel('N° Pseudoaleatorios')
-plt.title('Generadores de N° Pseudoaleatorios')
-#plt.show()
+
+
+plt.show()
