@@ -14,6 +14,7 @@ def menu():
     print("Menu: 0 para salir")
     print("1 - Middle Square") 
     print("2 - Generador Congruencial")
+    print("3 - Generador de Python")
     rta = int(input("Ingrese la opcion elegida: "))
     return rta
 
@@ -47,21 +48,34 @@ def middle_square ():
         seed = int(''.join(s)) #paso lista a numero
         semillas.append(seed) 
     print(numeros,semillas)
-    x1 = range(1, n)
-    plt.plot(x1, numeros, label="seed={0}, n={1}" .format(seed_ini, n))
+    
+    
+    numeros2=[]
+    print(n)
+    maximo=max(numeros)
+    for i in range(0, n-1):
+        numeros2.append(numeros[i]/maximo)
+    print(numeros2)
+    x1 = range(0, n-1)
+    plt.plot(x1, numeros2, label="MS - seed={0}, n={1}" .format(seed_ini, n))
+    plt.legend(loc="upper right")
+    plt.xlabel('Período')
+    plt.ylabel('N° Pseudoaleatorios')
+    plt.title('Generadores de N° Pseudoaleatorios - Middle Square')
+    #plt.show()  
+
+    return numeros
 
 def prueba_ks(numeros):
     print("\nDatos de la prueba Kolmogorov-Smirnov \n")
     n=len(numeros)
     numerosAux1=numeros
     numerosAux1.sort() #no tiene sentido pero es un paso de la prueba
-    #print("Números obtenidos en el generador: \n")
-    #print(numerosAux1)
     if n<50: 
         d_ks= float(input("Ingrese el valor de la tabla:")) #tengo que ingresar el valor de la tabla
     else:  
         d_ks=1.36/math.sqrt(n) #grado de confianza de 95%-- valor sacado de la tabla
-    #print(d_ks)
+    
     d_mas = []
     #D +
     for i in range(1,n):
@@ -78,7 +92,6 @@ def prueba_ks(numeros):
     print("D- : ",d2)
     if d1>d2: d=d1 
     else: d=d2
-    #print(d)
     print("D = {}\n".format(d))
     if d>d_ks: print("No sigue una distribucion uniforme según la prueba Kolmogorov Smirnov")
     else : print("Sigue una distribucion uniforme según la prueba Kolmogorov Smirnov")
@@ -105,12 +118,12 @@ def prueba_series(numeros):
                     # sumamos 1 a la frecuencia de esos rangos
                     freqs[i - 1][j - 1] += 1
 
-    #print("frecuencias: ", freqs)
-    frec_esperada= (long-1)/10
-
-    for i in range(0,10):
+    
+    frec_esperada= (long-1)/k
+    print('Frecuencia esperada', frec_esperada)
+    for i in range(0,k):
         cont = 0
-        for j in range(0,10):
+        for j in range(0,k):
             cont = cont +  freqs[i][j]
         frec_intervalos.append(cont)
     print("Frecuencia observada en cada intervalo: ",frec_intervalos)
@@ -119,24 +132,28 @@ def prueba_series(numeros):
     acum=0
     for i in frec_intervalos:
         acum+= (i - frec_esperada) ** 2
-
-    #print(acum)
+    
     chi2calc= acum * (1/ frec_esperada)
-    #print("chi2: ", chi2)
-
     chi_tabla=chi2.isf(0.05, k - 1)
     if (chi2calc < chi_tabla):
         print('Los numeros son independientes según la prueba de Series.')
     else:
         print('Los números no son independientes según la prueba de Series.')
     
-def chiCuadrado(numeros):                           
+    
+    x1 = range(0, k)
+    plt.plot(x1, [frec_esperada for i in x1], label="FR Esperada")
+    plt.scatter(x1, frec_intervalos, color='red', label="FR Observada")
+    plt.legend(loc="upper right")
+    plt.xlabel('Período')
+    plt.ylabel('Frecuencia Absoluta')
+    plt.title('GCL seed=5, a=7, c=4, m=443 - Prueba de Series')
+    plt.show()
+
+def chiCuadrado(numeros):   
+    n=len(numeros)                        
     numerosAux3=numeros
     k=10 #hacemos 10 rangos siempre 
-    #divido todos por la longitud del arreglo
-    for i in range(0,n):
-        numerosAux3.append(numeros[i]/n)
-    print(numerosAux3)
     #Calculamos frecuencias absolutas
     
     freqs = [0 for i in range(k)]
@@ -161,8 +178,16 @@ def chiCuadrado(numeros):
     if (chi2calc<chi_tabla): print('La hipótesis nula es aceptada. La distribución es uniforme según prueba de Chi-Cuadrado')
     else: print('La hipótesis nula no es aceptada. La distribución no es uniforme según prueba de Chi-Cuadrado')
     
+    x1 = range(0, k)
+    plt.plot(x1, [Ei for i in x1], label="FR Esperada")
+    plt.scatter(x1, freqs, color='red', label="FR Observada")
+    plt.legend(loc="upper right")
+    plt.xlabel('Período')
+    plt.ylabel('Frecuencia Absoluta')
+    plt.title('GCL seed=5, a=7, c=4, m=443 - Prueba de Chi-Cuadrado')
+    plt.show()
 
-def espera(numeros):
+def espera(numeros):     
     numerosAux4=numeros
     _i = 0 # extremo inferior subintervalo, >= 0
     _s = 0.5 # extremo superior subintervalo, <= 1
@@ -195,7 +220,7 @@ def espera(numeros):
 
     # cálculo de la frecuencia observada
     _fO = []
-    for i in range(_ch+1):
+    for i in range(_ch):
         if (i == 10): #9
             _fO.append(sum(n >= 10 for n in _tesp))
         else:
@@ -217,6 +242,14 @@ def espera(numeros):
     if (chi2calc<chi_tabla): print('La hipótesis nula es aceptada. Los números son independientes según prueba de Huecos')
     else: print('La hipótesis nula no es aceptada. Los números no son independientes según prueba de Huecos')
 
+    x1 = range(0, _ch)
+    plt.plot(x1, _fE, label="FR Esperada")
+    plt.scatter(x1, _fO, color='red', label="FR Observada")
+    plt.legend(loc="upper right")
+    plt.xlabel('Período')
+    plt.ylabel('Frecuencia Absoluta')
+    plt.title('GCL seed=5, a=7, c=1, m=443 - Prueba de Huecos')
+    plt.show()
 
 def gcl():  
     x = int(input("Introduce el valor de la semilla: "))
@@ -233,24 +266,51 @@ def gcl():
         numeros.append(x)
         periodo = periodo + 1 #voy contando las vueltas
     
-    #directamente divido acá asi ya paso el arreglo entre 0 y 1
+        #directamente divido acá asi ya paso el arreglo entre 0 y 1
     n=len(numeros)
+    maximo=max(numeros)
     for i in range(0,n):
-         numeros[i] = (numeros[i]/n)
+        numeros[i] = (numeros[i]/maximo)
     print(numeros)
-    
+    if(periodo == mod): print("El periodo es completo: ", periodo)
+    else: print("El periodo es incompleto:", periodo)
     
     #grafico general
     x1 = range(0, periodo)
-    plt.plot(x1, numeros, label="seed={0}, a={1}, c={2}, mod={3}" .format(bandera, a, c, mod))
-    if(periodo == mod): print("El periodo es completo: ", periodo)
-    else: print("El periodo es incompleto:", periodo)
+    #plt.plot(x1, numeros, label="GCL - seed={0}, a={1}, c={2}, m={3}" .format(bandera, a, c, mod))
     plt.legend(loc="upper right")
     plt.xlabel('Período')
     plt.ylabel('N° Pseudoaleatorios')
-    plt.title('Generadores de N° Pseudoaleatorios')
+    plt.title('Generadores de N° Pseudoaleatorios - GCL')
+    #plt.show()  
     
+    return numeros
     
+def random_python(numeros):
+    n=len(numeros)
+    sem=int(input('Ingrese la semilla: '))
+    random.seed(sem)
+    for i in range(0, n):
+        numeros[i]= (random.random())
+    print(numeros)
+    
+    x1 = range(0, n)
+    plt.plot(x1, numeros, label="PY - seed={0}, n={1}" .format(sem,n+1))
+    plt.legend(loc="upper right")
+    plt.xlabel('Período')
+    plt.ylabel('N° Pseudoaleatorios')
+    plt.title('Generadores de N° Pseudoaleatorios - Generador Python')
+    return numeros
+
+print('Bienvenido al generador de números pseudoaleatorios')
+seguir=int(input("1 ejecutar, 0 salir: "))
+while seguir==1:
+    rta = menu()
+    if rta == 1: numeros=middle_square()
+    elif rta == 2: numeros=gcl()
+    elif rta == 3: numeros=random_python(numeros)
+    
+    #pruebas p todos los generadores
     continuar=1
     while continuar==1:
         rta2= menu2()
@@ -259,15 +319,7 @@ def gcl():
         elif (rta2==3): prueba_series(numeros)
         elif (rta2==4): espera(numeros)
         continuar=int(input('Realizar otra prueba: 1 SI // 0 NO : '))
-
-
-print('Bienvenido al generador de números pseudoaleatorios')
-seguir=int(input("1 ejecutar, 0 salir: "))
-while seguir==1:
-    rta = menu()
-    if rta == 1: middle_square()
-    elif rta == 2: gcl()
+    
     seguir = int(input("1 ejecutar, 0 salir: "))
-
-
-plt.show()
+#plt.title('Generadores de N° Pseudoaleatorios - GCL vs Middle Square')
+#plt.show()
