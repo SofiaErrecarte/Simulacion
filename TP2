@@ -64,7 +64,7 @@ def middle_square ():
     plt.title('Generadores de N° Pseudoaleatorios - Middle Square')
     #plt.show()  
 
-    return numeros
+    return numeros2
 
 def prueba_ks(numeros):
     print("\nDatos de la prueba Kolmogorov-Smirnov \n")
