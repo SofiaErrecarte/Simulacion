@@ -54,6 +54,21 @@ def gamma(numeros, esp, var) :
     plt.plot(num_gamma)
     plt.show()  
 
+def normal(esp, var): 
+    num_normal=[]
+    k=30
+    
+    for i in range(0, n):
+        sum=0
+        for j in range(0, k): #me parece que tiene que ir generando una secuencia de longitud k de r numeros para cada x por lo que dice en la pag 112, quizás en la gamma sea lo mismo. de todos modos no entiendo por qué recibe esp y var aunque bueno, como siempre es el generador de python la distribuion de lo random siempre va a ser uniforme con =esp y var me parece, igual ni entiendo el graf q tira
+            r=random.random()
+            sum=sum+r
+        x=math.sqrt(var) * ((12/k)**(1/2)) * (sum-k/2) + esp
+        num_normal.append(x)
+    plt.plot(num_normal)
+    plt.show()
+
+
 numeros = []
 for i in range (0,n):
     numeros.append(random.random())
@@ -73,5 +88,5 @@ while rta != 0:
     if (rta == 1): exponencial(numeros,esp) 
     elif (rta== 2): uniforme(numeros,esp,var)
     elif (rta==3): gamma(numeros, esp, var)
-    #if (rta == 4): normal()
+    elif (rta==4): normal(esp, var)
     rta = menu()
