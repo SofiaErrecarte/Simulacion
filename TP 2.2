@@ -2,6 +2,7 @@ import random
 import math 
 import matplotlib.pyplot as plt
 from scipy.stats import chi2
+from scipy.stats import norm
 import statistics as stats
 import numpy as np
 import collections
@@ -54,8 +55,9 @@ def gamma(numeros, esp, var) :
     plt.plot(num_gamma)
     plt.show()  
 
-def normal(esp, var): 
+def normal(numeros, esp, var): 
     num_normal=[]
+    num_normalfunc=[]
     k=30
     
     for i in range(0, n):
@@ -63,9 +65,13 @@ def normal(esp, var):
         for j in range(0, k): #me parece que tiene que ir generando una secuencia de longitud k de r numeros para cada x por lo que dice en la pag 112, quizás en la gamma sea lo mismo. de todos modos no entiendo por qué recibe esp y var aunque bueno, como siempre es el generador de python la distribuion de lo random siempre va a ser uniforme con =esp y var me parece, igual ni entiendo el graf q tira
             r=random.random()
             sum=sum+r
+        y=norm.ppf(numeros[i], loc=esp, scale=var) # la puse para probar pero no estan bien los parametros, no entiendo q poronga hace eso q suma en la formula del libro
         x=math.sqrt(var) * ((12/k)**(1/2)) * (sum-k/2) + esp
         num_normal.append(x)
+        num_normalfunc.append(y)
     plt.plot(num_normal)
+    plt.show()
+    plt.plot(num_normalfunc)
     plt.show()
 
 
@@ -88,5 +94,5 @@ while rta != 0:
     if (rta == 1): exponencial(numeros,esp) 
     elif (rta== 2): uniforme(numeros,esp,var)
     elif (rta==3): gamma(numeros, esp, var)
-    elif (rta==4): normal(esp, var)
+    elif (rta==4): normal(numeros, esp, var)
     rta = menu()
