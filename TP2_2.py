@@ -6,7 +6,7 @@ from scipy.stats import norm
 import statistics as stats
 import numpy as np
 import collections
-n=1000
+n=10
 
 def menu():
     print("Menu: 0 para salir")
@@ -18,81 +18,110 @@ def menu():
     return rta
 
 
-def exponencial(numeros, esp):
-    num_exp=[]
-    for i in range(0,n):
-        x = (-esp * math.log(numeros[i]))
-        #print("x", x)
-        num_exp.append(x)
-    #print ("numeros generados dep de transf", num_exp)
-    #x1 = range(0,n)
-    plt.plot(num_exp)
-    plt.show()
+def exponencial(esp):   #ver bien formula
+    r = random.random()
+    x = (-esp * math.log(r))
+    return x
 
-def uniforme(numeros, esp, var):
+def uniforme(esp, var):
     a = 0
     b = 0
-    num_unif=[]
     a= esp-math.sqrt(3*var)
     b=2*esp - a
-    for i in range(0,n):
-        x= a+((b-a)* numeros[i])
-        num_unif.append(x)
-    plt.plot(num_unif)
-    plt.show()   
+    r=random.random()
+    x= a+((b-a)* r)
+    return x  
 
-def gamma(numeros, esp, var) :
-    #k=esp**2/var
-    k=10
+def gamma(esp, var) :
+    k=10 #lo definimos para q sea un numero entero
     alpha= esp/var
-    num_gamma=[]
-    for j in range(0, n):
-        tr=1
-        for i in range(1, k):
-            tr=tr*numeros[j]
-        x = (-(math.log(tr)) /alpha)
-        num_gamma.append(x)
-    plt.plot(num_gamma)
-    plt.show()  
+    tr=1
+    for i in range(0, k):
+        r=random.random()
+        tr=tr*r
+    x = (-(math.log(tr)) /alpha)
+    return x
 
-def normal(numeros, esp, var): 
-    num_normal=[]
-    num_normalfunc=[]
+def normal(esp, var): 
     k=30
-    
-    for i in range(0, n):
-        sum=0
-        for j in range(0, k): #me parece que tiene que ir generando una secuencia de longitud k de r numeros para cada x por lo que dice en la pag 112, quizás en la gamma sea lo mismo. de todos modos no entiendo por qué recibe esp y var aunque bueno, como siempre es el generador de python la distribuion de lo random siempre va a ser uniforme con =esp y var me parece, igual ni entiendo el graf q tira
+    suma=0
+    for j in range(0, k): 
             r=random.random()
-            sum=sum+r
-        y=norm.ppf(numeros[i], loc=esp, scale=var) # la puse para probar pero no estan bien los parametros, no entiendo q poronga hace eso q suma en la formula del libro
-        x=math.sqrt(var) * ((12/k)**(1/2)) * (sum-k/2) + esp
-        num_normal.append(x)
-        num_normalfunc.append(y)
-    plt.plot(num_normal)
-    plt.show()
-    plt.plot(num_normalfunc)
-    plt.show()
+            suma=suma+r
+        x=math.sqrt(var) * ((12/k)**(1/2)) * (suma-(k/2)) + esp
+    return x
+
+def pascal(esp, var):
+    k=30
+    p=esp/var
+    q=1-p
+    tr=1
+    for i in range(0,k):
+        r=random.random()
+        tr=tr*r
+    x=math.log10(tr)/math.log10(q)  ##ver bien si es log o ln
+    return x
+
+def binomial(esp, var):
+    x = 0
+    n=30
+    p = (esp-var)/esp
+    n = (esp**2) / (esp-var)
+    for i in range(0, n):
+        r=random.random()
+        if ( (r-p)<0 ):
+            x = x + 1
+    return x
+
+def hipergeometrica():
+    N=50   
+    n=10
+    p=0.5  #desp ver cual poner
+    x=0
+    for i in range(0, n):
+        r = random.random()
+        if ((r-p) < 0):
+            s = 1
+            x = x+1
+        else s=0
+        p=(N*p-s)/(N-1)
+        N=N-1
+    return x
+
+def poisson ():
+    p = 0.5 #ver desp cual poner
+    x=0
+    tr=1
+    b = math.exp(-p)
+    r=random.random()
+    tr=tr*r
+    while((tr-b) >=0):
+        x = x+1
+        r=random.random()
+        tr=tr*r
+    return x
+
+def empirica():
+    probabilidades=[0.273, 0.037, 0.195, 0.009, 0.124, 0.058, 0.062,0.151, 0.047, 0.044]
+    r=random.random()
+    for i in range(0, len(probabilidades)):
+        if(r<=probabilidades[i]):
+            x=i+1 #cat 1, 2, 3,...,10
+    return x
 
 
-numeros = []
-for i in range (0,n):
-    numeros.append(random.random())
-#print("numeros random",numeros)
-
-var=np.var(numeros)
-
-esp=0
-#frec = []
-#for i in range(0,n+1):
-    #esp = esp + (numeros[i] * numeros.count(numeros[i])/n)
-esp=np.mean(numeros)
-print("Esperanza", esp)
-
+esp = 30 #cambiar q ingrese user
+var = 5
 rta = menu()
 while rta != 0:
-    if (rta == 1): exponencial(numeros,esp) 
-    elif (rta== 2): uniforme(numeros,esp,var)
-    elif (rta==3): gamma(numeros, esp, var)
-    elif (rta==4): normal(numeros, esp, var)
+    if (rta == 1): x = exponencial(esp) 
+    elif (rta== 2): x = uniforme(esp,var)
+    elif (rta==3): x = gamma(esp, var)
+    elif (rta==4): x = normal(esp, var)
+    elif (rta==5): x = pascal(esp, var)
+    elif (rta==6): x = binomial(esp, var)
+    elif (rta==7): x = hipergeometrica()
     rta = menu()
+
+#menu discretas o continuas
+#menu pruebas
