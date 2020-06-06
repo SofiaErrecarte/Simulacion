@@ -30,10 +30,10 @@ def chiCuadrado(numeros):
     freqs = [0 for i in range(k)]
     #Para cada rango
     for i in range(1,k+1):
-        max = i/k
-        min = max - (1/k)
+        maxi = i/k
+        mini = maxi - (1/k)
         for xi in numerosAux3:
-            if xi < max and xi >= min:
+            if xi < maxi and xi >= mini:
                 #Si el numero esta en el rango, sumamos 1 a la frecuencia de ese rango
                 freqs[i-1]+=1
     Ei=n/k #totalDatos/totalIntervalos
