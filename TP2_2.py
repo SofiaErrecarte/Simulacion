@@ -15,6 +15,11 @@ def menu():
     print("2 - Uniforme")
     print("3 - Gamma")
     print("4 - Normal")
+    print("5 - Pascal")
+    print("6 - Binomial")
+    print("7 - Hipergeométrica")
+    print("8 - Poisson")
+    print("9 - Empírica")
     rta = int(input("Ingrese la opcion elegida: "))
     return rta
 
@@ -30,10 +35,10 @@ def chiCuadrado(numeros):
     freqs = [0 for i in range(k)]
     #Para cada rango
     for i in range(1,k+1):
-        maxi = i/k
-        mini = maxi - (1/k)
+        max = i/k
+        min = max - (1/k)
         for xi in numerosAux3:
-            if xi < maxi and xi >= mini:
+            if xi < max and xi >= min:
                 #Si el numero esta en el rango, sumamos 1 a la frecuencia de ese rango
                 freqs[i-1]+=1
     Ei=n/k #totalDatos/totalIntervalos
@@ -51,7 +56,6 @@ def chiCuadrado(numeros):
     plt.ylabel('Frecuencia Absoluta')
     plt.title('Prueba de Chi-Cuadrado')
     plt.show()
-
 
 def exponencial(esp):   #ver bien formula
     r = random.random()
@@ -87,28 +91,28 @@ def normal(esp, var):
     return x
 
 def pascal(esp, var):
-    k=30
+    k=round(esp**2/(var-esp))
     p=esp/var
     q=1-p
     tr=1
     for i in range(0,k):
         r=random.random()
         tr=tr*r
-    x=math.log10(tr)/math.log10(q)  ##ver bien si es log o ln
-    return x
+    x=math.log10(tr)/math.log10(q)
+    return round(x)
 
 def binomial(esp, var):
     x = 0
-    n=30
     p = (esp-var)/esp
-    n = (esp**2) / (esp-var)
+    n = round((esp**2) / (esp-var))
+    print(n)
     for i in range(0, n):
         r=random.random()
         if ( (r-p)<0 ):
             x = x + 1
     return x
 
-def hipergeometrica():
+def hipergeometrica():#recordar acá que la esp =np y var= npq(N-n/N-1)
     N=50   
     n=10
     p=0.5  # desp ver cual poner
@@ -138,10 +142,11 @@ def poisson ():
     return x
 
 def empirica():
-    probabilidades=[0.273, 0.037, 0.195, 0.009, 0.124, 0.058, 0.062,0.151, 0.047, 0.044]
+    probabilidades=[0.273, 0.037, 0.195, 0.009, 0.124, 0.058, 0.062,0.151, 0.047, 0.044] # esp = 
+    x=0
     r=random.random()
     for i in range(0, len(probabilidades)):
-        if(r<=probabilidades[i]):
+        if(r<=probabilidades[i] and r>probabilidades[i+1]):
             x=i+1 #cat 1, 2, 3,...,10
     return x
 
@@ -181,12 +186,13 @@ def prueba_ks(numeros):
     if d>d_ks: print("No sigue una distribucion uniforme según la prueba Kolmogorov Smirnov\n")
     else : print("Sigue una distribucion uniforme según la prueba Kolmogorov Smirnov\n")
 
-esp = 0.7
-var = 0.05
+#esp = 0.7  #para CONTINUAS
+#var = 0.05
+esp=30 #para DISCRETAS
+var=5
 rta = menu()
 while rta != 0:
-    if (rta == 1):
-        
+    if (rta == 1):        
         numeros=[]
         for i in range(0, n): 
             x = exponencial(esp)
@@ -204,11 +210,57 @@ while rta != 0:
         print(np.mean(numeros))
         chiCuadrado(numeros)
         prueba_ks(numeros)
-    elif (rta==3): x = gamma(esp, var)
-    elif (rta==4): x = normal(esp, var)
-    elif (rta==5): x = pascal(esp, var)
-    elif (rta==6): x = binomial(esp, var)
-    elif (rta==7): x = hipergeometrica()
+    elif (rta==3): 
+        numeros=[]
+        for i in range(0, n): 
+            x = gamma(esp, var)
+            numeros.append(x)
+        print(numeros)
+        print(np.mean(numeros))
+    elif (rta==4):
+        numeros=[]
+        for i in range(0, n): 
+            x = normal(esp, var)
+            numeros.append(x)
+        print(numeros)
+        print(np.mean(numeros))
+    elif (rta==5): 
+        numeros=[]
+        for i in range(0, n):
+            esp1=3
+            var1=4
+            x = pascal(esp1, var1)
+            numeros.append(x)
+        print(numeros)
+        print(np.mean(numeros))
+    elif (rta==6):
+        numeros=[]
+        for i in range(0, n): 
+            x = binomial(esp, var)
+            numeros.append(x)
+        print(numeros)
+        print(np.mean(numeros))
+    elif (rta==7):
+        numeros=[]
+        for i in range(0, n): 
+            x = hipergeometrica()
+            numeros.append(x)
+        print(numeros)
+        print(np.mean(numeros))
+    elif (rta==8):
+        numeros=[]
+        for i in range(0, n): 
+            x = poisson
+            numeros.append(x)
+        print(numeros)
+        print(np.mean(numeros))
+    elif (rta==9):
+        numeros=[]
+        for i in range(0, n): 
+            x = empirica()
+            numeros.append(x)
+        print(numeros)
+        print(np.mean(numeros))
     rta = menu()
 
 #menu discretas o continuas
