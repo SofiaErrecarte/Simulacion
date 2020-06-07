@@ -23,14 +23,13 @@ def menu():
     return rta
 
 #PRUEBAS
-def dif_esperanzas(esperanzas, var):
-    for i in range(1, len(esperanzas)):
-        resta= esperanzas[i-1] - esperanzas[i]
-        print(resta)
+def dif_esperanzas(esperanzas, var, esp):
+    for i in range(0, len(esperanzas)):
+        resta= abs(esperanzas[i] - esp)
+        print("esp ", esp)
+        print("resta ",resta)
         print("var", var)
-        if (resta>=0 and resta<=var):
-            print("OK")
-        elif (resta<0 and resta>=(-var)):
+        if (resta<=var):
             print("OK")
         else: print("NO")
             
@@ -105,10 +104,10 @@ def hipergeometrica():
         else: s = 0
         p=(N*p-s)/(N-1)
         N=N-1
-    return x, var_hiper
+    return x, var_hiper, esp_hiper
 
 def poisson():
-    p = 0.5 #ver desp cual poner
+    p = 0.5 #es muy grande creo
     x=0
     tr=1
     b = math.exp(-p)
@@ -118,7 +117,7 @@ def poisson():
         x = x+1
         r=random.random()
         tr=tr*r
-    return x
+    return x, p
 
 def empirica():
     probabilidades=[0.2, 0.1, 0.3, 0.05, 0.05, 0.2, 0.1]
@@ -137,7 +136,7 @@ def empirica():
     else:
         for i in range(1, len(probabilidades)):
             if(r>probabilidades_acum[i-1] and r<=probabilidades_acum[i]):
-                x=i+1 #cat 1, 2, 3,...,10        
+                x=i+1 #cat 1, 2, 3,...,7       
     #print("categoria: ", x)    
     return x
 
@@ -159,7 +158,7 @@ while rta != 0:
             esp1=np.mean(numeros)
             print(esp1)
             esperanzas.append(esp1)
-        dif_esperanzas(esperanzas, var)
+        dif_esperanzas(esperanzas, var, esp)
 
     elif (rta== 2):
         numeros=[]
@@ -172,7 +171,7 @@ while rta != 0:
             esp1 = np.mean(numeros)
             print(esp1)
             esperanzas.append(esp1)
-        dif_esperanzas(esperanzas,var)
+        dif_esperanzas(esperanzas,var, esp)
     elif (rta==3):
         numeros=[]
         esperanzas=[]
@@ -184,7 +183,7 @@ while rta != 0:
             esp1 = np.mean(numeros)
             print(esp1)
             esperanzas.append(esp1)
-        dif_esperanzas(esperanzas, var)
+        dif_esperanzas(esperanzas, var, esp)
 
     elif (rta==4):
         numeros=[]
@@ -196,7 +195,7 @@ while rta != 0:
             esp1 = np.mean(numeros)
             print(esp1)
         esperanzas.append(esp1)
-        dif_esperanzas(esperanzas, var)
+        dif_esperanzas(esperanzas, var, esp)
     elif (rta==5):
         numeros=[]
         esperanzas=[]
@@ -210,7 +209,7 @@ while rta != 0:
             esp2 = np.mean(numeros)
             print(esp2)
             esperanzas.append(esp2)
-        dif_esperanzas(esperanzas, var1)
+        dif_esperanzas(esperanzas, var1, esp1)
     elif (rta==6):
         numeros=[]
         esperanzas = []
@@ -222,7 +221,7 @@ while rta != 0:
             esp1 = np.mean(numeros)
             print(esp1)
             esperanzas.append(esp1)
-        dif_esperanzas(esperanzas, var)
+        dif_esperanzas(esperanzas, var, esp)
     elif (rta==7):
         numeros=[]
         esperanzas = []
@@ -234,16 +233,21 @@ while rta != 0:
             esp1 = np.mean(numeros)
             print(esp1)
             esperanzas.append(esp1)
-        dif_esperanzas(esperanzas, var)
+        dif_esperanzas(esperanzas, var,esp)
     elif (rta==8):
         numeros=[]
-        for i in range(0, n): 
-                x = poisson()
-                numeros.append(x)
-            print(numeros)
-         esp1=np.mean(numeros)
-         print(np.mean(numeros))
-            
+        esperanzas=[]
+        for j in range(0, repes):
+            for i in range(0, n): 
+                    x = poisson()
+                    numeros.append(x)
+             print(numeros)
+             esp1=np.mean(numeros)
+             print(esp1)
+             esperanzas.append(esp1)
+        dif_esperanzas(esperanzas,lbda)
+
+
     elif (rta==9):
         numeros=[]
         for i in range(0, n): 
