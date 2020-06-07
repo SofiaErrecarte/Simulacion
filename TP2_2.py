@@ -142,12 +142,16 @@ def poisson ():
     return x
 
 def empirica():
-    probabilidades=[0.273, 0.037, 0.195, 0.009, 0.124, 0.058, 0.062,0.151, 0.047, 0.044] # esp = 
-    x=0
+    probabilidades=[0.273, 0.037, 0.195, 0.009, 0.124, 0.058, 0.062,0.151, 0.047, 0.044]
     r=random.random()
-    for i in range(0, len(probabilidades)):
-        if(r<=probabilidades[i] and r>probabilidades[i+1]):
+    print(r)
+    for i in range(1, len(probabilidades)):
+        x=0
+        mini=sum(probabilidades[n] for n in range(0,i-1))
+        maxi=sum(probabilidades[n] for n in range(0,i))
+        if(r<=maxi and r>mini):
             x=i+1 #cat 1, 2, 3,...,10
+        else: x=1
     return x
 
 
