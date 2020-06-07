@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 from scipy.stats import chi2
 from scipy.stats import norm
 import statistics as stats
-from scipy.stats import chisquare
 import numpy as np
 import collections
 n=100
@@ -24,40 +23,9 @@ def menu():
     return rta
 
 #PRUEBAS
-def chiCuadrado(numeros):   
-    print("\nDatos de la prueba Chi-Cuadrado")
-    n=len(numeros)                        
-    numerosAux3=numeros
-    k=10 #hacemos 10 rangos siempre 
-    print('Cantidad de rangos: ', k)
-    #Calculamos frecuencias absolutas
-    
-    freqs = [0 for i in range(k)]
-    #Para cada rango
-    for i in range(1,k+1):
-        max = i/k
-        min = max - (1/k)
-        for xi in numerosAux3:
-            if xi < max and xi >= min:
-                #Si el numero esta en el rango, sumamos 1 a la frecuencia de ese rango
-                freqs[i-1]+=1
-    Ei=n/k #totalDatos/totalIntervalos
-    chi2calc = (1/Ei) * sum ( [ (Oi-(Ei)) **2 for Oi in freqs ] )
-    chi_tabla=chi2.isf(0.01, k - 1)
-    print('{0} < {1}'.format(chi2calc, chi_tabla))
-    if (chi2calc<chi_tabla): print('La hipótesis nula es aceptada. La distribución es uniforme según prueba de Chi-Cuadrado\n')
-    else: print('La hipótesis nula no es aceptada. La distribución no es uniforme según prueba de Chi-Cuadrado\n')
-    #print(numerosAux3)
-    x1 = range(0, k)
-    plt.plot(x1, [Ei for i in x1], label="FR Esperada")
-    plt.scatter(x1, freqs, color='red', label="FR Observada")
-    plt.legend(loc="upper right")
-    plt.xlabel('Período')
-    plt.ylabel('Frecuencia Absoluta')
-    plt.title('Prueba de Chi-Cuadrado')
-    plt.show()
 
-def exponencial(esp):   #ver bien formula
+#DISTRIBUCIONES
+def exponencial(esp):   
     r = random.random()
     x = (-esp * math.log(r))
     return x
@@ -105,19 +73,20 @@ def binomial(esp, var):
     x = 0
     p = (esp-var)/esp
     n = round((esp**2) / (esp-var))
-    print(n)
     for i in range(0, n):
         r=random.random()
         if ( (r-p)<0 ):
             x = x + 1
     return x
 
-def hipergeometrica():#recordar acá que la esp =np y var= npq(N-n/N-1)
+def hipergeometrica():
     N=50   
     n=10
     p=0.5  # desp ver cual poner
-    s=0
-    x=0
+    q=1-0.5
+    s, x= 0, 0
+    esp_hiper=n*p  #esp y var esperadas
+    var_hiper=n*p*(1-p)*((N-n)/(N-1))
     for i in range(0, n):
         r = random.random()
         if ((r-p) < 0):
@@ -128,7 +97,7 @@ def hipergeometrica():#recordar acá que la esp =np y var= npq(N-n/N-1)
         N=N-1
     return x
 
-def poisson ():
+def poisson():
     p = 0.5 #ver desp cual poner
     x=0
     tr=1
@@ -142,53 +111,25 @@ def poisson ():
     return x
 
 def empirica():
-    probabilidades=[0.273, 0.037, 0.195, 0.009, 0.124, 0.058, 0.062,0.151, 0.047, 0.044]
-    r=random.random()
-    print(r)
+    probabilidades=[0.2, 0.1, 0.3, 0.05, 0.05, 0.2, 0.1]
+    probabilidades_acum=[]
+    probabilidades_acum.append(probabilidades[0])
+    acum=probabilidades[0]
+    #esp_emp=sum(probabilidades[i]*(i+1) for i in range(0, len(probabilidades))) #esperanza esperada
     for i in range(1, len(probabilidades)):
-        x=0
-        mini=sum(probabilidades[n] for n in range(0,i-1))
-        maxi=sum(probabilidades[n] for n in range(0,i))
-        if(r<=maxi and r>mini):
-            x=i+1 #cat 1, 2, 3,...,10
-        else: x=1
+        acum=acum+probabilidades[i]
+        probabilidades_acum.append(acum)
+    #print(probabilidades)
+    #print(probabilidades_acum)
+    r=random.random()
+    #print("random:",r)
+    if(r<=probabilidades_acum[0]): x=1 #(0+1)
+    else:
+        for i in range(1, len(probabilidades)):
+            if(r>probabilidades_acum[i-1] and r<=probabilidades_acum[i]):
+                x=i+1 #cat 1, 2, 3,...,10        
+    #print("categoria: ", x)    
     return x
-
-
-def prueba_ks(numeros):
-    print("\nDatos de la prueba Kolmogorov-Smirnov")
-    n=len(numeros)
-    numerosAux1=[]
-    numerosAux1=numeros
-    numerosAux1.sort()
-    #print(numerosAux1)
-    if n<50: 
-        d_ks= float(input("Ingrese el valor de la tabla:")) #tengo que ingresar el valor de la tabla
-    else:  
-        d_ks=1.36/math.sqrt(n) #grado de confianza de 95%-- valor sacado de la tabla
-    
-    d_mas = []
-    #D +
-    for i in range(1,n):  #aca por q no hace de 0 a n?
-        valor=(i/n)-numerosAux1[i-1]
-        d_mas.append(valor)
-    #D -
-    d_menos=[]
-    for i in range (1,n):
-        valor=numerosAux1[i-1]-(((i-1)-1)/n)
-        d_menos.append(valor)
-
-    d1= max([num for num in d_mas]) #busco los numeros mayores de cada lista d 
-    print("D+:",d1)
-    d2= max([num for num in d_menos])
-    print("D-:",d2)
-
-    if d1>d2: d=d1 
-    else: d=d2
-    print("D = {}".format(d))
-    print('{0} < {1}'.format(d, d_ks))
-    if d>d_ks: print("No sigue una distribucion uniforme según la prueba Kolmogorov Smirnov\n")
-    else : print("Sigue una distribucion uniforme según la prueba Kolmogorov Smirnov\n")
 
 #esp = 0.7  #para CONTINUAS
 #var = 0.05
@@ -203,8 +144,6 @@ while rta != 0:
             numeros.append(x)
         print(numeros)
         print(np.mean(numeros))
-        chiCuadrado(numeros)
-        print(chisquare(numeros))
     elif (rta== 2):
         numeros=[]
         for i in range(0, n): 
@@ -212,8 +151,6 @@ while rta != 0:
             numeros.append(x)
         print(numeros)
         print(np.mean(numeros))
-        chiCuadrado(numeros)
-        prueba_ks(numeros)
     elif (rta==3): 
         numeros=[]
         for i in range(0, n): 
@@ -254,7 +191,7 @@ while rta != 0:
     elif (rta==8):
         numeros=[]
         for i in range(0, n): 
-            x = poisson
+            x = poisson()
             numeros.append(x)
         print(numeros)
         print(np.mean(numeros))
@@ -266,6 +203,3 @@ while rta != 0:
         print(numeros)
         print(np.mean(numeros))
     rta = menu()
-
-#menu discretas o continuas
-#menu pruebas
