@@ -3,10 +3,14 @@ import math
 import matplotlib.pyplot as plt
 from scipy.stats import chi2
 from scipy.stats import norm
+from scipy.stats import binom
+from scipy.stats import poisson
+from scipy.stats import expon
+from scipy.stats import uniform
 import statistics as stats
 import numpy as np
 import collections
-n=100
+n=5000
 
 def menu():
     print("Menu: 0 para salir")
@@ -24,15 +28,94 @@ def menu():
 
 #PRUEBAS
 def dif_esperanzas(esperanzas, var, esp):
+    print("Esperanza esperada: ", esp)
+    print("Varianza esperada: ", var)
     for i in range(0, len(esperanzas)):
         resta= abs(esperanzas[i] - esp)
-        print("esp ", esp)
-        print("resta ",resta)
-        print("var", var)
+        print("Diferencia entre E.Esperada y E.calculada: ",resta)
         if (resta<=var):
-            print("OK")
+            print("El conjunto generador pasa la prueba de Diferencia de Esperanzas.")
         else: print("NO")
-            
+
+def grafico_normal(et, st, esperanzas, desvios):
+    x = np.linspace(norm.ppf(0.01, et, st), norm.ppf(0.99, et, st), 100)
+    for i in range(0, len(esperanzas)):
+        plt.plot(x, norm.pdf(x, esperanzas[i], desvios[i]), label = 'Observada {0}'.format(i+1))
+    plt.plot(x, norm.pdf(x, et, st), 'r', label = 'Esperada')
+    plt.xlabel('x')
+    plt.ylabel('f(x)')
+    plt.title('Distribución normal observada y esperada')
+    plt.legend()
+    plt.show()
+
+def grafico_binomial(param_n, param_p, n, p):
+    x = np.arange(binom.ppf(0.01, n, p), binom.ppf(0.99, n, p))
+    fmp = binom.pmf(x, n, p) # Función de Masa de Probabilidad Esperada
+    for i in range(0, len(param_n)):
+        x_1 = np.arange(binom.ppf(0.01, param_n[i], param_p[i]), binom.ppf(0.99, param_n[i], param_p[i]))
+        fmp_1 = binom.pmf(x_1, param_n[i], param_p[i]) # Función de Masa de Probabilidad Observada
+        plt.plot(x_1, fmp_1, label="Observada {0}".format(i+1))
+        plt.vlines(x_1, 0, fmp_1, lw=5, alpha=0.5)
+    plt.plot(x, fmp, '--', label="Esperada")
+    plt.vlines(x, 0, fmp, colors='b', lw=5, alpha=0.5)
+    plt.title('Función de Masa de Probabilidad')
+    plt.ylabel('probabilidad')
+    plt.xlabel('valores')
+    plt.legend()
+    plt.show()
+
+def grafico_poisson(esperanzas, lbda):
+    p1 = poisson(lbda) # Distribución lambda esperado
+    x = np.arange(p1.ppf(0.01), p1.ppf(0.99))
+    fmp = p1.pmf(x) # Función de Masa de Probabilidad
+    plt.plot(x, fmp, '--', label="Esperada")
+    plt.vlines(x, 0, fmp, colors='b', lw=5, alpha=0.5)
+    for i in range(0, len(esperanzas)):
+        p2 = poisson(lbda) # Distribución lambda observado
+        x = np.arange(p2.ppf(0.01), p2.ppf(0.99))
+        fmp = p2.pmf(x) # Función de Masa de Probabilidad
+        plt.plot(x, fmp, '--', label="Observada {0}".format(i+1))
+        plt.vlines(x, 0, fmp, lw=5, alpha=0.5)
+    plt.title('Distribución Poisson')
+    plt.ylabel('probabilidad')
+    plt.xlabel('valores')
+    plt.legend()
+    plt.show()
+
+def grafico_exp(esperanzas, esp):
+    loc=0
+    xvalues = np.linspace(expon.ppf(0.01, loc, esp), expon.ppf(0.99, loc, esp), 100)
+    cdf = expon.cdf(xvalues, loc, esp)
+    plt.plot(xvalues, cdf, label="Esperada")
+    for i in range(0, len(esperanzas)):
+        xvalues = np.linspace(expon.ppf(0.01, loc, esperanzas[i]), expon.ppf(0.99, loc, esperanzas[i]), 100)
+        cdf = expon.cdf(xvalues, loc, esperanzas[i])
+        plt.plot(xvalues, cdf, label="Observada {0}".format(i+1))
+    plt.title("Distribución Exponencial")
+    plt.ylabel('f(x)')
+    plt.xlabel('X')
+    plt.legend()
+    plt.show()
+
+def grafico_uniforme(a, b, param_a, param_b):
+    uniforme = uniform(a, b)
+    x = np.linspace(uniforme.ppf(0.01), uniforme.ppf(0.99), 100)
+    fp = uniforme.pdf(x) # Función de Probabilidad
+    plt.plot(x, fp, '--', label="Esperada")
+    plt.vlines(x, 0, fp, colors='b', lw=5, alpha=0.5)
+    for i in range(0, len(param_a)):
+        uniforme = uniform(param_a[i], param_b[i])
+        x = np.linspace(uniforme.ppf(0.01), uniforme.ppf(0.99), 100)
+        fp = uniforme.pdf(x) # Función de Probabilidad
+        plt.plot(x, fp, '--', label="Observada {0}".format(i+1))
+        plt.vlines(x, 0, fp, lw=5, alpha=0.5)
+    plt.ylim(0, 1.2)
+    plt.title('Distribución Uniforme')
+    plt.ylabel('probabilidad')
+    plt.xlabel('valores')
+    plt.legend()
+    plt.show()
+
 #DISTRIBUCIONES
 def exponencial(esp):   
     r = random.random()
@@ -46,7 +129,7 @@ def uniforme(esp, var):
     b=2*esp - a
     r=random.random()
     x= a+((b-a)* r)
-    return x  
+    return x, a, b  
 
 def gamma(esp, var) :
     k=10 #lo definimos para q sea un numero entero
@@ -86,7 +169,7 @@ def binomial(esp, var):
         r=random.random()
         if ( (r-p)<0 ):
             x = x + 1
-    return x
+    return x, n, p
 
 def hipergeometrica():
     N=50   
@@ -106,8 +189,8 @@ def hipergeometrica():
         N=N-1
     return x, var_hiper, esp_hiper
 
-def poisson():
-    p = 0.5 #es muy grande creo
+def poissonD():
+    p = 6 #es muy grande creo
     x=0
     tr=1
     b = math.exp(-p)
@@ -124,28 +207,27 @@ def empirica():
     probabilidades_acum=[]
     probabilidades_acum.append(probabilidades[0])
     acum=probabilidades[0]
-    #esp_emp=sum(probabilidades[i]*(i+1) for i in range(0, len(probabilidades))) #esperanza esperada
+    esp_emp=sum(probabilidades[i]*(i+1) for i in range(0, len(probabilidades))) #esperanza esperada
+    var_emp=sum( ( ( (i+1) - esp_emp)**2 )*probabilidades[i] for i in range(0, len(probabilidades)))
     for i in range(1, len(probabilidades)):
         acum=acum+probabilidades[i]
         probabilidades_acum.append(acum)
-    #print(probabilidades)
-    #print(probabilidades_acum)
     r=random.random()
-    #print("random:",r)
     if(r<=probabilidades_acum[0]): x=1 #(0+1)
     else:
         for i in range(1, len(probabilidades)):
             if(r>probabilidades_acum[i-1] and r<=probabilidades_acum[i]):
-                x=i+1 #cat 1, 2, 3,...,7       
-    #print("categoria: ", x)    
-    return x
+                x=i+1 #cat 1, 2, 3,...,7    
+    return x, esp_emp, var_emp
 
-#esp = 0.7  #para CONTINUAS
-#var = 0.05
-esp=30 #para DISCRETAS
-var=5
-desv= math.sqrt(var)
-repes=2 #define cuantas esperanzas comparamos
+espC = 0.7  #para CONTINUAS
+varC = 0.05
+desvC=math.sqrt(varC)
+espD=30 #para DISCRETAS
+varD=5
+desvD= math.sqrt(varD)
+
+repes=1 #define cuantas esperanzas comparamos
 rta = menu()
 while rta != 0:
     if (rta == 1):        
@@ -153,50 +235,58 @@ while rta != 0:
         esperanzas=[]
         for j in range(0,repes):
             for i in range(0, n):
-                x = exponencial(esp)
+                x = exponencial(espC)
                 numeros.append(x)
-            print(numeros)
             esp1=np.mean(numeros)
-            print(esp1)
             esperanzas.append(esp1)
-        dif_esperanzas(esperanzas, var, esp)
+        dif_esperanzas(esperanzas, varC, espC)
+        grafico_exp(esperanzas, espC)
 
     elif (rta== 2):
         numeros=[]
         esperanzas=[]
+        param_a=[]
+        param_b=[]
         for j in range(0, repes):
             for i in range(0, n):
-                x = uniforme(esp, var)
+                x, a, b = uniforme(espC, varC)
                 numeros.append(x)
-            print(numeros)
             esp1 = np.mean(numeros)
-            print(esp1)
+            var1 = np.var(numeros)
+            a1= esp1-math.sqrt(3*var1)
+            b1=2*esp1 - a1
+            param_a.append(a1)
+            param_b.append(b1)
             esperanzas.append(esp1)
-        dif_esperanzas(esperanzas,var, esp)
+        dif_esperanzas(esperanzas,varC, espC)
+        grafico_uniforme(a, b, param_a, param_b)
+
     elif (rta==3):
         numeros=[]
         esperanzas=[]
         for j in range(0, repes):
             for i in range(0, n):
-                x = gamma(esp, var)
+                x = gamma(espC, varC)
                 numeros.append(x)
-            print(numeros)
             esp1 = np.mean(numeros)
-            print(esp1)
             esperanzas.append(esp1)
-        dif_esperanzas(esperanzas, var, esp)
+        dif_esperanzas(esperanzas, varC, espC)
 
     elif (rta==4):
+        esperanzas=[]
+        desvios=[]
         numeros=[]
         for j in range(0, repes):
             for i in range(0, n):
-                x = normal(esp, var)
+                x = normal(espC, varC)
                 numeros.append(x)
-            print(numeros)
             esp1 = np.mean(numeros)
-            print(esp1)
+            desv1=np.std(numeros)
             esperanzas.append(esp1)
-        dif_esperanzas(esperanzas, var, esp)
+            desvios.append(desv1)
+        dif_esperanzas(esperanzas, varC, espC)
+        grafico_normal(espC, desvC, esperanzas, desvios)
+
     elif (rta==5):
         numeros=[]
         esperanzas=[]
@@ -206,54 +296,63 @@ while rta != 0:
                 var1=4
                 x = pascal(esp1, var1)
                 numeros.append(x)
-            print(numeros)
             esp2 = np.mean(numeros)
-            print(esp2)
             esperanzas.append(esp2)
         dif_esperanzas(esperanzas, var1, esp1)
+
     elif (rta==6):
         numeros=[]
         esperanzas = []
+        param_n=[]
+        param_p=[]
         for j in range(0, repes):
             for i in range(0, n):
-                x = binomial(esp, var)
+                x, n, p = binomial(espD, varD)
                 numeros.append(x)
-            print(numeros)
             esp1 = np.mean(numeros)
-            print(esp1)
+            var1= np.var(numeros)
+            p1 = (esp1-var1)/esp1
+            n1 = round((esp1**2) / (esp1-var1))
+            param_n.append(n1)
+            param_p.append(p1)
             esperanzas.append(esp1)
-        dif_esperanzas(esperanzas, var, esp)
+        dif_esperanzas(esperanzas, varD, espD)
+        grafico_binomial(param_n, param_p, n, p)
+
     elif (rta==7):
         numeros=[]
         esperanzas = []
         for j in range(0, repes):
             for i in range(0, n):
-                x , var= hipergeometrica()
+                x, var, esp= hipergeometrica()
                 numeros.append(x)
-            print(numeros)
             esp1 = np.mean(numeros)
-            print(esp1)
             esperanzas.append(esp1)
-        dif_esperanzas(esperanzas, var,esp)
+        dif_esperanzas(esperanzas, var, esp)
+
     elif (rta==8):
         numeros=[]
         esperanzas=[]
         for j in range(0, repes):
             for i in range(0, n): 
-                    x = poisson()
+                    x, lbda = poissonD()
                     numeros.append(x)
-             print(numeros)
-             esp1=np.mean(numeros)
-             print(esp1)
-             esperanzas.append(esp1)
-        dif_esperanzas(esperanzas,lbda)
+            esp1=np.mean(numeros)
+            esperanzas.append(esp1)
+        dif_esperanzas(esperanzas, lbda, lbda)
+        grafico_poisson(esperanzas, lbda)
 
 
     elif (rta==9):
         numeros=[]
-        for i in range(0, n): 
-            x = empirica()
-            numeros.append(x)
-        print(numeros)
-        print(np.mean(numeros))
+        esperanzas=[]
+        for j in range(0, repes):
+            for i in range(0, n): 
+                x, esp, var = empirica()
+                numeros.append(x)
+            esp1=np.mean(numeros)
+            esperanzas.append(esp1)
+        dif_esperanzas(esperanzas, var, esp) 
+        
+
     rta = menu()
