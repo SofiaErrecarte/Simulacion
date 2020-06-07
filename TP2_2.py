@@ -237,16 +237,13 @@ while rta != 0:
         dif_esperanzas(esperanzas, var)
     elif (rta==8):
         numeros=[]
-        esperanzas=[]
-        for j in range (0,repes):
-            for i in range(0, n): 
+        for i in range(0, n): 
                 x = poisson()
                 numeros.append(x)
             print(numeros)
-            esp1=np.mean(numeros)
-            print(np.mean(numeros))
-            esperanzas.append(esp1)
-        dif_esperanzas(esperanzas,var)
+         esp1=np.mean(numeros)
+         print(np.mean(numeros))
+            
     elif (rta==9):
         numeros=[]
         for i in range(0, n): 
