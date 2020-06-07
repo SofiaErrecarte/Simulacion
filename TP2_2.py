@@ -144,6 +144,7 @@ def empirica():
 #var = 0.05
 esp=30 #para DISCRETAS
 var=5
+desv= math.sqrt(var)
 repes=2 #define cuantas esperanzas comparamos
 rta = menu()
 while rta != 0:
@@ -194,7 +195,7 @@ while rta != 0:
             print(numeros)
             esp1 = np.mean(numeros)
             print(esp1)
-        esperanzas.append(esp1)
+            esperanzas.append(esp1)
         dif_esperanzas(esperanzas, var, esp)
     elif (rta==5):
         numeros=[]
