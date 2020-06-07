@@ -23,7 +23,17 @@ def menu():
     return rta
 
 #PRUEBAS
-
+def dif_esperanzas(esperanzas, var):
+    for i in range(1, len(esperanzas)):
+        resta= esperanzas[i-1] - esperanzas[i]
+        print(resta)
+        print("var", var)
+        if (resta>=0 and resta<=var):
+            print("OK")
+        elif (resta<0 and resta>=(-var)):
+            print("OK")
+        else: print("NO")
+            
 #DISTRIBUCIONES
 def exponencial(esp):   
     r = random.random()
@@ -95,7 +105,7 @@ def hipergeometrica():
         else: s = 0
         p=(N*p-s)/(N-1)
         N=N-1
-    return x
+    return x, var_hiper
 
 def poisson():
     p = 0.5 #ver desp cual poner
@@ -135,59 +145,96 @@ def empirica():
 #var = 0.05
 esp=30 #para DISCRETAS
 var=5
+repes=2 #define cuantas esperanzas comparamos
 rta = menu()
 while rta != 0:
     if (rta == 1):        
         numeros=[]
-        for i in range(0, n): 
-            x = exponencial(esp)
-            numeros.append(x)
-        print(numeros)
-        print(np.mean(numeros))
+        esperanzas=[]
+        for j in range(0,repes):
+            for i in range(0, n):
+                x = exponencial(esp)
+                numeros.append(x)
+            print(numeros)
+            esp1=np.mean(numeros)
+            print(esp1)
+            esperanzas.append(esp1)
+        dif_esperanzas(esperanzas, var)
+
     elif (rta== 2):
         numeros=[]
-        for i in range(0, n): 
-            x = uniforme(esp, var)
-            numeros.append(x)
-        print(numeros)
-        print(np.mean(numeros))
-    elif (rta==3): 
+        esperanzas=[]
+        for j in range(0, repes):
+            for i in range(0, n):
+                x = uniforme(esp, var)
+                numeros.append(x)
+            print(numeros)
+            esp1 = np.mean(numeros)
+            print(esp1)
+            esperanzas.append(esp1)
+        dif_esperanzas(esperanzas,var)
+    elif (rta==3):
         numeros=[]
-        for i in range(0, n): 
-            x = gamma(esp, var)
-            numeros.append(x)
-        print(numeros)
-        print(np.mean(numeros))
+        esperanzas=[]
+        for j in range(0, repes):
+            for i in range(0, n):
+                x = gamma(esp, var)
+                numeros.append(x)
+            print(numeros)
+            esp1 = np.mean(numeros)
+            print(esp1)
+            esperanzas.append(esp1)
+        dif_esperanzas(esperanzas, var)
+
     elif (rta==4):
         numeros=[]
-        for i in range(0, n): 
-            x = normal(esp, var)
-            numeros.append(x)
-        print(numeros)
-        print(np.mean(numeros))
-    elif (rta==5): 
+        for j in range(0, repes):
+            for i in range(0, n):
+                x = normal(esp, var)
+                numeros.append(x)
+            print(numeros)
+            esp1 = np.mean(numeros)
+            print(esp1)
+        esperanzas.append(esp1)
+        dif_esperanzas(esperanzas, var)
+    elif (rta==5):
         numeros=[]
-        for i in range(0, n):
-            esp1=3
-            var1=4
-            x = pascal(esp1, var1)
-            numeros.append(x)
-        print(numeros)
-        print(np.mean(numeros))
+        esperanzas=[]
+        for j in range(0, repes):
+            for i in range(0, n):
+                esp1=3
+                var1=4
+                x = pascal(esp1, var1)
+                numeros.append(x)
+            print(numeros)
+            esp2 = np.mean(numeros)
+            print(esp2)
+            esperanzas.append(esp2)
+        dif_esperanzas(esperanzas, var1)
     elif (rta==6):
         numeros=[]
-        for i in range(0, n): 
-            x = binomial(esp, var)
-            numeros.append(x)
-        print(numeros)
-        print(np.mean(numeros))
+        esperanzas = []
+        for j in range(0, repes):
+            for i in range(0, n):
+                x = binomial(esp, var)
+                numeros.append(x)
+            print(numeros)
+            esp1 = np.mean(numeros)
+            print(esp1)
+            esperanzas.append(esp1)
+        dif_esperanzas(esperanzas, var)
     elif (rta==7):
         numeros=[]
-        for i in range(0, n): 
-            x = hipergeometrica()
-            numeros.append(x)
-        print(numeros)
-        print(np.mean(numeros))
+        esperanzas = []
+        for j in range(0, repes):
+            for i in range(0, n):
+                x , var= hipergeometrica()
+                numeros.append(x)
+            print(numeros)
+            esp1 = np.mean(numeros)
+            print(esp1)
+            esperanzas.append(esp1)
+        dif_esperanzas(esperanzas, var)
     elif (rta==8):
         numeros=[]
         for i in range(0, n): 
