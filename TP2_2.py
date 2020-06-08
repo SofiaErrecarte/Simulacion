@@ -1,12 +1,7 @@
 import random 
 import math 
 import matplotlib.pyplot as plt
-from scipy.stats import chi2
-from scipy.stats import norm
-from scipy.stats import binom
-from scipy.stats import poisson
-from scipy.stats import expon
-from scipy.stats import uniform
+from scipy.stats import chi2, norm, binom, poisson, expon, uniform
 import statistics as stats
 import numpy as np
 import collections
@@ -44,7 +39,7 @@ def grafico_normal(et, st, esperanzas, desvios):
     plt.plot(x, norm.pdf(x, et, st), 'r', label = 'Esperada')
     plt.xlabel('x')
     plt.ylabel('f(x)')
-    plt.title('Distribución normal observada y esperada')
+    plt.title('Distribución Normal observada y esperada')
     plt.legend()
     plt.show()
 
@@ -58,9 +53,9 @@ def grafico_binomial(param_n, param_p, n, p):
         plt.vlines(x_1, 0, fmp_1, lw=5, alpha=0.5)
     plt.plot(x, fmp, '--', label="Esperada")
     plt.vlines(x, 0, fmp, colors='b', lw=5, alpha=0.5)
-    plt.title('Función de Masa de Probabilidad')
-    plt.ylabel('probabilidad')
-    plt.xlabel('valores')
+    plt.xlabel('x')
+    plt.ylabel('f(x)')
+    plt.title('Distribución Binomial observada y esperada')
     plt.legend()
     plt.show()
 
@@ -76,9 +71,9 @@ def grafico_poisson(esperanzas, lbda):
         fmp = p2.pmf(x) # Función de Masa de Probabilidad
         plt.plot(x, fmp, '--', label="Observada {0}".format(i+1))
         plt.vlines(x, 0, fmp, lw=5, alpha=0.5)
-    plt.title('Distribución Poisson')
-    plt.ylabel('probabilidad')
-    plt.xlabel('valores')
+    plt.xlabel('x')
+    plt.ylabel('f(x)')
+    plt.title('Distribución de Poisson observada y esperada')
     plt.legend()
     plt.show()
 
@@ -91,7 +86,7 @@ def grafico_exp(esperanzas, esp):
         xvalues = np.linspace(expon.ppf(0.01, loc, esperanzas[i]), expon.ppf(0.99, loc, esperanzas[i]), 100)
         cdf = expon.cdf(xvalues, loc, esperanzas[i])
         plt.plot(xvalues, cdf, label="Observada {0}".format(i+1))
-    plt.title("Distribución Exponencial")
+    plt.title("Distribución Exponencial observada y esperada")
     plt.ylabel('f(x)')
     plt.xlabel('X')
     plt.legend()
@@ -110,9 +105,9 @@ def grafico_uniforme(a, b, param_a, param_b):
         plt.plot(x, fp, '--', label="Observada {0}".format(i+1))
         plt.vlines(x, 0, fp, lw=5, alpha=0.5)
     plt.ylim(0, 1.2)
-    plt.title('Distribución Uniforme')
-    plt.ylabel('probabilidad')
-    plt.xlabel('valores')
+    plt.xlabel('x')
+    plt.ylabel('f(x)')
+    plt.title('Distribución Uniforme observada y esperada')
     plt.legend()
     plt.show()
 
@@ -123,10 +118,13 @@ def grafico_empirica(total, probabilidades):
     freq_relativa=[]
     freq_absoulta = collections.Counter(numeros)
     freq_relativa = {k: v / len(numeros) for k, v in freq_absoulta.items()}
-    plt.bar(freq_relativa.keys()+0, freq_relativa.values(), alpha=0.5, color="r", label="Esperada")
-    plt.bar(cat, probabilidades, alpha=0.5, color="b")
-    plt.tight_layout()
-    plt.show()
+    plt.bar(freq_relativa.keys(), freq_relativa.values(), alpha=0.5, color="r", label="Observada")
+    plt.bar(cat, probabilidades, alpha=0.5, color="b", label="Esperada")
+    #plt.tight_layout()
+    plt.xlabel('x')
+    plt.ylabel('f(x)')
+    plt.title('Distribución Empírica observada y esperada')
+    plt.legend()
     plt.show()
 
 #DISTRIBUCIONES
@@ -240,7 +238,7 @@ espD=30 #para DISCRETAS
 varD=5
 desvD= math.sqrt(varD)
 
-repes=1 #define cuantas esperanzas comparamos
+repes=2 #define cuantas esperanzas comparamos
 rta = menu()
 while rta != 0:
     
