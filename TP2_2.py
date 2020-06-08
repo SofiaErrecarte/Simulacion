@@ -10,7 +10,7 @@ from scipy.stats import uniform
 import statistics as stats
 import numpy as np
 import collections
-n=5000
+n=100
 
 def menu():
     print("Menu: 0 para salir")
@@ -116,6 +116,19 @@ def grafico_uniforme(a, b, param_a, param_b):
     plt.legend()
     plt.show()
 
+def grafico_empirica(total, probabilidades):
+    cat=list(range(1,len(probabilidades)+1))
+    #for i in range(0, len(total)):
+    freq_absoluta=[]
+    freq_relativa=[]
+    freq_absoulta = collections.Counter(numeros)
+    freq_relativa = {k: v / len(numeros) for k, v in freq_absoulta.items()}
+    plt.bar(freq_relativa.keys()+0, freq_relativa.values(), alpha=0.5, color="r", label="Esperada")
+    plt.bar(cat, probabilidades, alpha=0.5, color="b")
+    plt.tight_layout()
+    plt.show()
+    plt.show()
+
 #DISTRIBUCIONES
 def exponencial(esp):   
     r = random.random()
@@ -218,7 +231,7 @@ def empirica():
         for i in range(1, len(probabilidades)):
             if(r>probabilidades_acum[i-1] and r<=probabilidades_acum[i]):
                 x=i+1 #cat 1, 2, 3,...,7    
-    return x, esp_emp, var_emp
+    return x, esp_emp, var_emp, probabilidades
 
 espC = 0.7  #para CONTINUAS
 varC = 0.05
@@ -230,10 +243,12 @@ desvD= math.sqrt(varD)
 repes=1 #define cuantas esperanzas comparamos
 rta = menu()
 while rta != 0:
+    
     if (rta == 1):        
         numeros=[]
         esperanzas=[]
         for j in range(0,repes):
+            numeros=[]
             for i in range(0, n):
                 x = exponencial(espC)
                 numeros.append(x)
@@ -248,6 +263,7 @@ while rta != 0:
         param_a=[]
         param_b=[]
         for j in range(0, repes):
+            numeros=[]
             for i in range(0, n):
                 x, a, b = uniforme(espC, varC)
                 numeros.append(x)
@@ -265,6 +281,7 @@ while rta != 0:
         numeros=[]
         esperanzas=[]
         for j in range(0, repes):
+            numeros=[]
             for i in range(0, n):
                 x = gamma(espC, varC)
                 numeros.append(x)
@@ -277,6 +294,7 @@ while rta != 0:
         desvios=[]
         numeros=[]
         for j in range(0, repes):
+            numeros=[]
             for i in range(0, n):
                 x = normal(espC, varC)
                 numeros.append(x)
@@ -291,6 +309,7 @@ while rta != 0:
         numeros=[]
         esperanzas=[]
         for j in range(0, repes):
+            numeros=[]
             for i in range(0, n):
                 esp1=3
                 var1=4
@@ -306,6 +325,7 @@ while rta != 0:
         param_n=[]
         param_p=[]
         for j in range(0, repes):
+            numeros=[]
             for i in range(0, n):
                 x, n, p = binomial(espD, varD)
                 numeros.append(x)
@@ -323,6 +343,7 @@ while rta != 0:
         numeros=[]
         esperanzas = []
         for j in range(0, repes):
+            numeros=[]
             for i in range(0, n):
                 x, var, esp= hipergeometrica()
                 numeros.append(x)
@@ -334,6 +355,7 @@ while rta != 0:
         numeros=[]
         esperanzas=[]
         for j in range(0, repes):
+            numeros=[]
             for i in range(0, n): 
                     x, lbda = poissonD()
                     numeros.append(x)
@@ -346,13 +368,13 @@ while rta != 0:
     elif (rta==9):
         numeros=[]
         esperanzas=[]
-        for j in range(0, repes):
-            for i in range(0, n): 
-                x, esp, var = empirica()
-                numeros.append(x)
-            esp1=np.mean(numeros)
-            esperanzas.append(esp1)
+        for i in range(0, n): 
+            x, esp, var, prob = empirica()
+            numeros.append(x)
+        esp1=np.mean(numeros)
+        esperanzas.append(esp1)
         dif_esperanzas(esperanzas, var, esp) 
+        grafico_empirica(numeros, prob)
         
 
     rta = menu()
