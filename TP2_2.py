@@ -5,7 +5,7 @@ from scipy.stats import chi2, norm, binom, poisson, expon, uniform
 import statistics as stats
 import numpy as np
 import collections
-n=100
+n=2500
 
 def menu():
     print("Menu: 0 para salir")
@@ -33,97 +33,100 @@ def dif_esperanzas(esperanzas, var, esp):
         else: print("NO")
 
 def grafico_normal(et, st, esperanzas, desvios):
+    plt.subplot(211)
     x = np.linspace(norm.ppf(0.01, et, st), norm.ppf(0.99, et, st), 100)
     for i in range(0, len(esperanzas)):
-        plt.plot(x, norm.pdf(x, esperanzas[i], desvios[i]), label = 'Observada {0}'.format(i+1))
+        plt.plot(x, norm.pdf(x, esperanzas[i], desvios[i]), label = 'Observada {0}'.format(i+1), alpha=0.5)
     plt.plot(x, norm.pdf(x, et, st), 'r', label = 'Esperada')
     plt.xlabel('x')
     plt.ylabel('f(x)')
-    plt.title('Distribución Normal observada y esperada')
+    plt.title('Distribución Normal')
     plt.legend()
     plt.show()
-
+    
 def grafico_binomial(param_n, param_p, n, p):
+    plt.subplot(211)
     x = np.arange(binom.ppf(0.01, n, p), binom.ppf(0.99, n, p))
     fmp = binom.pmf(x, n, p) # Función de Masa de Probabilidad Esperada
     for i in range(0, len(param_n)):
         x_1 = np.arange(binom.ppf(0.01, param_n[i], param_p[i]), binom.ppf(0.99, param_n[i], param_p[i]))
         fmp_1 = binom.pmf(x_1, param_n[i], param_p[i]) # Función de Masa de Probabilidad Observada
-        plt.plot(x_1, fmp_1, label="Observada {0}".format(i+1))
+        plt.plot(x_1, fmp_1, label="Observada {0}".format(i+1), alpha=0.5)
         plt.vlines(x_1, 0, fmp_1, lw=5, alpha=0.5)
-    plt.plot(x, fmp, '--', label="Esperada")
-    plt.vlines(x, 0, fmp, colors='b', lw=5, alpha=0.5)
+    plt.plot(x, fmp, label="Esperada", color='r')
+    plt.vlines(x, 0, fmp, lw=5, alpha=0.5)
     plt.xlabel('x')
     plt.ylabel('f(x)')
-    plt.title('Distribución Binomial observada y esperada')
+    plt.title('Distribución Binomial')
     plt.legend()
-    plt.show()
 
 def grafico_poisson(esperanzas, lbda):
+    plt.subplot(223)
     p1 = poisson(lbda) # Distribución lambda esperado
     x = np.arange(p1.ppf(0.01), p1.ppf(0.99))
     fmp = p1.pmf(x) # Función de Masa de Probabilidad
-    plt.plot(x, fmp, '--', label="Esperada")
-    plt.vlines(x, 0, fmp, colors='b', lw=5, alpha=0.5)
+    plt.plot(x, fmp, '--', color='r', label="Esperada")
+    plt.vlines(x, 0, fmp, lw=5, alpha=0.5)
     for i in range(0, len(esperanzas)):
         p2 = poisson(lbda) # Distribución lambda observado
         x = np.arange(p2.ppf(0.01), p2.ppf(0.99))
         fmp = p2.pmf(x) # Función de Masa de Probabilidad
-        plt.plot(x, fmp, '--', label="Observada {0}".format(i+1))
+        plt.plot(x, fmp, '--', label="Observada {0}".format(i+1), alpha=0.5)
         plt.vlines(x, 0, fmp, lw=5, alpha=0.5)
     plt.xlabel('x')
     plt.ylabel('f(x)')
-    plt.title('Distribución de Poisson observada y esperada')
-    plt.legend()
-    plt.show()
+    plt.title('Distribución de Poisson')
+    plt.legend(loc="upper right")
 
 def grafico_exp(esperanzas, esp):
+    plt.subplot(223)
     loc=0
     xvalues = np.linspace(expon.ppf(0.01, loc, esp), expon.ppf(0.99, loc, esp), 100)
     cdf = expon.cdf(xvalues, loc, esp)
-    plt.plot(xvalues, cdf, label="Esperada")
+    plt.plot(xvalues, cdf, color='r', label="Esperada")
     for i in range(0, len(esperanzas)):
         xvalues = np.linspace(expon.ppf(0.01, loc, esperanzas[i]), expon.ppf(0.99, loc, esperanzas[i]), 100)
         cdf = expon.cdf(xvalues, loc, esperanzas[i])
-        plt.plot(xvalues, cdf, label="Observada {0}".format(i+1))
-    plt.title("Distribución Exponencial observada y esperada")
+        plt.plot(xvalues, cdf, label="Observada {0}".format(i+1), alpha=0.5)
+    plt.title("Distribución Exponencial")
     plt.ylabel('f(x)')
     plt.xlabel('X')
     plt.legend()
-    plt.show()
+    
 
 def grafico_uniforme(a, b, param_a, param_b):
+    plt.subplot(224)
     uniforme = uniform(a, b)
     x = np.linspace(uniforme.ppf(0.01), uniforme.ppf(0.99), 100)
     fp = uniforme.pdf(x) # Función de Probabilidad
-    plt.plot(x, fp, '--', label="Esperada")
-    plt.vlines(x, 0, fp, colors='b', lw=5, alpha=0.5)
+    plt.plot(x, fp, label="Esperada", color="r")
+    plt.vlines(x, 0, fp, lw=5, color='r')
     for i in range(0, len(param_a)):
         uniforme = uniform(param_a[i], param_b[i])
         x = np.linspace(uniforme.ppf(0.01), uniforme.ppf(0.99), 100)
         fp = uniforme.pdf(x) # Función de Probabilidad
-        plt.plot(x, fp, '--', label="Observada {0}".format(i+1))
-        plt.vlines(x, 0, fp, lw=5, alpha=0.5)
+        plt.plot(x, fp, label="Observada {0}".format(i+1), alpha=0.5)
+        plt.vlines(x, 0, fp, lw=5, alpha=0.5, color='')
     plt.ylim(0, 1.2)
     plt.xlabel('x')
     plt.ylabel('f(x)')
-    plt.title('Distribución Uniforme observada y esperada')
+    plt.title('Distribución Uniforme')
     plt.legend()
-    plt.show()
+    
 
-def grafico_empirica(total, probabilidades):
+def grafico_empirica(numeros, probabilidades):
+    plt.subplot(224)
     cat=list(range(1,len(probabilidades)+1))
-    #for i in range(0, len(total)):
     freq_absoluta=[]
     freq_relativa=[]
     freq_absoulta = collections.Counter(numeros)
     freq_relativa = {k: v / len(numeros) for k, v in freq_absoulta.items()}
-    plt.bar(freq_relativa.keys(), freq_relativa.values(), alpha=0.5, color="r", label="Observada")
-    plt.bar(cat, probabilidades, alpha=0.5, color="b", label="Esperada")
-    #plt.tight_layout()
+    plt.bar(cat, probabilidades, color="r", label="Esperada")
+    plt.bar(freq_relativa.keys(), freq_relativa.values(), alpha=0.5, label="Observada")
+    
     plt.xlabel('x')
     plt.ylabel('f(x)')
-    plt.title('Distribución Empírica observada y esperada')
+    plt.title('Distribución Empírica')
     plt.legend()
     plt.show()
 
@@ -185,7 +188,7 @@ def binomial(esp, var):
 def hipergeometrica():
     N=50   
     n=10
-    p=0.5  # desp ver cual poner
+    p=0.5  
     q=1-0.5
     s, x= 0, 0
     esp_hiper=n*p  #esp y var esperadas
@@ -201,7 +204,7 @@ def hipergeometrica():
     return x, var_hiper, esp_hiper
 
 def poissonD():
-    p = 6 #es muy grande creo
+    p = 6 
     x=0
     tr=1
     b = math.exp(-p)
@@ -215,9 +218,8 @@ def poissonD():
 
 def empirica():
     probabilidades=[0.2, 0.1, 0.3, 0.05, 0.05, 0.2, 0.1]
-    probabilidades_acum=[]
+    probabilidades_acum, acum=[], probabilidades[0]
     probabilidades_acum.append(probabilidades[0])
-    acum=probabilidades[0]
     esp_emp=sum(probabilidades[i]*(i+1) for i in range(0, len(probabilidades))) #esperanza esperada
     var_emp=sum( ( ( (i+1) - esp_emp)**2 )*probabilidades[i] for i in range(0, len(probabilidades)))
     for i in range(1, len(probabilidades)):
@@ -227,8 +229,7 @@ def empirica():
     if(r<=probabilidades_acum[0]): x=1 #(0+1)
     else:
         for i in range(1, len(probabilidades)):
-            if(r>probabilidades_acum[i-1] and r<=probabilidades_acum[i]):
-                x=i+1 #cat 1, 2, 3,...,7    
+            if(r>probabilidades_acum[i-1] and r<=probabilidades_acum[i]): x=i+1 #cat 1, 2, 3,...,7    
     return x, esp_emp, var_emp, probabilidades
 
 espC = 0.7  #para CONTINUAS
@@ -238,7 +239,7 @@ espD=30 #para DISCRETAS
 varD=5
 desvD= math.sqrt(varD)
 
-repes=2 #define cuantas esperanzas comparamos
+repes=5 #define cuantas corridas comparamos
 rta = menu()
 while rta != 0:
     
@@ -254,6 +255,7 @@ while rta != 0:
             esperanzas.append(esp1)
         dif_esperanzas(esperanzas, varC, espC)
         grafico_exp(esperanzas, espC)
+        
 
     elif (rta== 2):
         numeros=[]
