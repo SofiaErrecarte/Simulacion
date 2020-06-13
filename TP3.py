@@ -8,7 +8,7 @@ import collections
 qlimit=100000000 #mismo parametro para infinito de los evento 
 #busy, idle, nevnts, next_, niq, numcus, server, totcus
 #aniq, autil, marrvt, mservt, time, tlevnt, totdel
-tarrvl=[1,2,3,4,5,6] #ver
+tarrvl=[0]*100 #ver
 tne=[]
 marrvt, mservt, totcus=0.7,0.9,100
 nevnts=2 
