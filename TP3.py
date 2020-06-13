@@ -8,7 +8,7 @@ import collections
 qlimit=100000000 #mismo parametro para infinito de los evento 
 #busy, idle, nevnts, next_, niq, numcus, server, totcus
 #aniq, autil, marrvt, mservt, time, tlevnt, totdel
-tarrvl=[]*qlimit #ver
+tarrvl=[1,2,3,4,5,6] #ver
 tne=[]
 marrvt, mservt, totcus=0.7,0.9,100
 nevnts=2 
@@ -34,7 +34,7 @@ def init():
     t=time + expon(marrvt)
     tne.insert(1,t)
     tne.insert(2, 10**30)
-    #tarrvl.insert(0,t)
+    tarrvl.insert(niq,t)
     print (tne[0],' ',tne[1], ' ', tne[2])
 
     #return time,niq,tlevnt,numcus,totdel,aniq,autil,server
@@ -65,7 +65,8 @@ def arrive():
         niq=niq+1 #nro clientes en cola
         #if que no va
         a=time
-        tarrvl[niq+1]=a
+        #print (niq)
+        tarrvl[niq]=a
         #tarrvl.insert(niq,time)
         #print(niq)
     else:
@@ -91,7 +92,7 @@ def depart():
         totdel=totdel + delay
         numcus=numcus+1
         l=time + expon(mservt)
-        tarrvl[i]= l
+        tarrvl[2]= l
         #tne.insert(2,time + expon(mservt))
         for i in range (0,niq): #range(0)???
            x=tarrvl[i+1]
@@ -114,7 +115,7 @@ def uptavg():
     tlevnt=time
     aniq = aniq+(niq*tsle)
     autil = autil+ (server*tsle)
-    print (tsle)
+    #print (tsle)
 
 init()  
 print(time,niq,tlevnt,numcus,totdel,aniq,autil)
@@ -133,6 +134,7 @@ while(numcus<totcus):
             #print(totdel)
     elif(stop==1):
         break
+    print('niq',niq)
 print(tarrvl)
 report()
 
