@@ -10,7 +10,7 @@ qlimit=100000000 #mismo parametro para infinito de los evento
 #aniq, autil, marrvt, mservt, time, tlevnt, totdel
 tarrvl=[0]*100 #ver
 tne=[]
-marrvt, mservt, totcus=0.7,0.9,100
+marrvt, mservt, totcus=0.8,0.9,100
 nevnts=2 
 busy=1
 idle=0
@@ -134,7 +134,7 @@ while(numcus<totcus):
             #print(totdel)
     elif(stop==1):
         break
-    print('niq',niq)
+    #print('niq',niq)
 print(tarrvl)
 report()
 
