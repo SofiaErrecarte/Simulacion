@@ -10,7 +10,7 @@ qlimit=10**30 #mismo parametro para infinito de los evento
 #aniq, autil, marrvt, mservt, time, tlevnt, totdel
 tarrvl=[] #ver
 tne=[]
-marrvt, mservt, totcus=1,0.5,10
+marrvt, mservt, totcus=0.7,0.9,100
 nevnts=2 
 busy=1
 idle=0
@@ -31,9 +31,10 @@ def init():
     autil=0
     server=idle
     tne.insert(0,0)
-    tne.insert(1,time + expon(marrvt))
+    t=time + expon(marrvt)
+    tne.insert(1,t)
     tne.insert(2, 10**30)
-    tarrvl.insert(0,0)
+    tarrvl.insert(0,t)
     print (tne[0],' ',tne[1], ' ', tne[2])
 
     #return time,niq,tlevnt,numcus,totdel,aniq,autil,server
@@ -51,7 +52,7 @@ def timing():
     if (next_ == 0):
         print('Lista vacia en tiempo{0}'.format(time))
         stop=1
-    print('tiempo1',mintne)
+    #print('tiempo1',mintne)
     time = mintne
     return stop
 
@@ -76,7 +77,7 @@ def depart():
         tne.insert(2, 10**30) #ver en variable
     else:
         niq=niq-1
-        delay = time - tarrvl[1]
+        delay = time - tarrvl[0]
         #print('delay',delay)
         totdel=totdel + delay
         numcus=numcus+1
@@ -96,9 +97,9 @@ def report():
 
 def uptavg():
     global tsle, time, tlevnt, niq, aniq, autil, server
-    tsle=time - tlevnt
+    tsle = time - tlevnt
     tlevnt=time
-    aniq=aniq+(niq*tsle)
+    aniq = aniq+(niq*tsle)
     autil = autil+ (server*tsle)
 
 
@@ -108,9 +109,10 @@ print (marrvt,' ', mservt,' ', totcus)
 while(numcus<totcus):
     stop= timing()
     if (stop==0):
-        print('tiempo2' ,time)
+        #print('tiempo2' ,time)
         #print(next_)
         uptavg()
+        print(aniq)
         if (next_==1):
             arrive()
         elif(next_==2):
