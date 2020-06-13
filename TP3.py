@@ -1,7 +1,6 @@
 import random 
 import math 
 import matplotlib.pyplot as plt
-from scipy.stats import chi2, norm, binom, poisson, expon, uniform
 import statistics as stats
 import numpy as np
 import collections
@@ -9,7 +8,7 @@ import collections
 qlimit=10**30 #mismo parametro para infinito de los evento 
 #busy, idle, nevnts, next_, niq, numcus, server, totcus
 #aniq, autil, marrvt, mservt, time, tlevnt, totdel
-tarrvl=[qlimit] #ver
+tarrvl=[] #ver
 tne=[]
 marrvt, mservt, totcus=1,0.5,10
 nevnts=2 
@@ -34,12 +33,14 @@ def init():
     tne.insert(0,0)
     tne.insert(1,time + expon(marrvt))
     tne.insert(2, 10**30)
+    tarrvl.insert(0,0)
     print (tne[0],' ',tne[1], ' ', tne[2])
+
     #return time,niq,tlevnt,numcus,totdel,aniq,autil,server
 
 def timing():
     global mintne, next_, tne, time,nevnts
-    #mintne= 10**29
+    mintne= 10**29
     next_ = 0
     stop=0
     for i in range(1,nevnts+1):
@@ -56,18 +57,17 @@ def timing():
 
 def arrive():
     global tne, time, marrvt, server,delay,totdel,numcus,mservt,niq
-    tne.insert(0,0)
     tne.insert(1, time + expon(marrvt))
     if (server == busy):
-        niq+=1 #nro clientes en cola
+        niq=niq+1 #nro clientes en cola
         #if que no va
         tarrvl.insert(niq,time)
     else:
         delay=0 #sacar tiempo porm de clientes en cola
-        totdel+= delay
-        numcus+=1 #nº de clientes que completaron demora
+        totdel= totdel + delay
+        numcus=numcus+1 #nº de clientes que completaron demora
         server=busy
-        tne.insert(1, time + expon(mservt)) 
+        tne.insert(2, time + expon(mservt)) 
     
 def depart():
     global niq,server,tne,totdel,delay,tarrvl,numcus,mservt
@@ -75,13 +75,13 @@ def depart():
         server =idle
         tne.insert(2, 10**30) #ver en variable
     else:
-        niq-=1
+        niq=niq-1
         delay = time - tarrvl[1]
-        print('delay',delay)
-        totdel+=delay
-        numcus+=1
+        #print('delay',delay)
+        totdel=totdel + delay
+        numcus=numcus+1
         tne.insert(2,time + expon(mservt))
-        for i in range (0,niq): #range(0)???
+        for i in range (1,niq+1): #range(0)???
             tarrvl.insert(i,tarrvl[i+1])
 
 def report():
@@ -102,8 +102,7 @@ def uptavg():
     autil = autil+ (server*tsle)
 
 
-init() 
-mintne= 10**29  
+init()  
 print(time,niq,tlevnt,numcus,totdel,aniq,autil)
 print (marrvt,' ', mservt,' ', totcus)
 while(numcus<totcus):
