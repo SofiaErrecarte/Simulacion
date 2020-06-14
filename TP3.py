@@ -11,7 +11,7 @@ tarrvl=[]#[0]*100 #TIEMPO DE ARRIBO DE CLIENTES A COLA. SOLO TIENE LOS TIEMPOS D
 
 tne=[0, 0, 0] #TIEMPO DEL SIGUIENTE EVENTO DE TIPO 1 O 2-AGREGAMOS EVENTO 0 PARA USAR DIRECTAMENTE INDICES 1 Y 2
 
-marrvt, mservt, totcus=0.8,0.9,10 #MEDIA LLEGADA ENTREARRIBOS, MEDIA TIEMPO DE SERVICIO, TOTAL DE DEMORAS DE CLIENTES P QUE FINALICE EL SISTEMA
+marrvt, mservt, totcus=1,2,8 #MEDIA LLEGADA ENTREARRIBOS, MEDIA TIEMPO DE SERVICIO, TOTAL DE DEMORAS DE CLIENTES P QUE FINALICE EL SISTEMA
 
 nevnts=2 #NUMERO DE TIPOS DE EVENTOS
 busy=1 
@@ -87,7 +87,7 @@ def depart():
         prox_cli_cola=tarrvl.pop(0)
         delay = time - prox_cli_cola #sumo la demora del 1er cliente q entró a la cola cuyo tiempo en tarravl guardamos en 0 (niq-1)
         totdel=totdel + delay
-        print('Clientes en cola. demora: {0}, tiempo arrival[0]: {1}'.format(niq, prox_cli_cola))
+        print('Clientes en cola {0}. demora: {1}, tiempo arrival[0]: {2}'.format(niq, delay, prox_cli_cola))
         numcus=numcus+1
         l=time + expon(mservt)
         tne[2]= l
