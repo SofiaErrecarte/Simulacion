@@ -15,9 +15,13 @@ pn_corridas=[]
 time_corridas=[]
 stop2_corridas=[]
 deneg_corridas=[]
-tot_niq=0
 pn=0
 p0=0
+repes=10 #define cuantas corridas comparamos
+pn_corridas=[] #guarda en cada corrida i cuentas veces hubo cola de longitud n_cli
+prob_corridas=[] #guarda la probabilidad en cada corrida i de que haya cola de longitud n_cli
+
+
 
 def expon(lambda_):  #procedimiento de tp anterior para calcular num con dist exponencial
     r = random.random()
@@ -26,17 +30,17 @@ def expon(lambda_):  #procedimiento de tp anterior para calcular num con dist ex
     return x
 
 def init(): #metodo de inicialización de variables
-    global time,niq, tlevnt,numcus,totdel,aniq,autil,server,tne,marrvt, qlimit, nevnts, tarrvl, totcus, mservt, busy, idle, avgniq_acum, util_acum, numcus_acum, time_acum, avgdel_acum, server_acum, niq_acum, n_cli, deneg_serv, cont_niq, pn
+    global time,niq, tlevnt,numcus,totdel,aniq,autil,server,tne,marrvt, qlimit, nevnts, tarrvl, totcus, mservt, busy, idle, avgniq_acum, util_acum, numcus_acum, time_acum, avgdel_acum, server_acum, niq_acum, n_cli, deneg_serv, cont_niq, pn, w_acum, l_acum, pn_corridas
 
     qlimit=20 #mismo parametro para infinito de los evento 
     
-    n_cli= 10#probabilidad de n cli en cola
+    n_cli= 1 #probabilidad de n cli en cola
     
     tarrvl=[]#[0]*100 #TIEMPO DE ARRIBO DE CLIENTES A COLA. SOLO TIENE LOS TIEMPOS DE LOS QUE ESTÁN EN COLA. trabajado como pila en python con append al final para agregar y pop(0) para quitar el first in
 
     tne=[0, 0, 0] #TIEMPO DEL SIGUIENTE EVENTO DE TIPO 1 O 2-AGREGAMOS EVENTO 0 PARA USAR DIRECTAMENTE INDICES 1 Y 2
 
-    marrvt, mservt, totcus=7,9,100 #LAMBDA LLEGADA ENTREARRIBOS, MEDIA(mu) TIEMPO DE SERVICIO, TOTAL DE DEMORAS DE CLIENTES P QUE FINALICE EL SISTEMA
+    marrvt, mservt, totcus=8,9,500 #LAMBDA LLEGADA ENTREARRIBOS, MEDIA(mu) TIEMPO DE SERVICIO, TOTAL DE DEMORAS DE CLIENTES P QUE FINALICE EL SISTEMA
 
     nevnts=2 #NUMERO DE TIPOS DE EVENTOS
     busy=1 
@@ -46,8 +50,11 @@ def init(): #metodo de inicialización de variables
     avgniq_acum=[]
     numcus_acum=[]
     avgdel_acum=[]
+    w_acum=[]
+    l_acum=[]
     niq_acum=[]
     server_acum=[]
+    
     cont_niq=[0]*qlimit #arreglo que acumula en cada i las veces que tengo i cli en cola
     time=0
     niq=0 #NUMERO DE CLIENTES ACTUALMENTE EN COLA
@@ -124,19 +131,20 @@ def depart():
         #print('tiempo sgtes eventos 2:', tne[0],' ',tne[1], ' ', tne[2])
 
 def report():
-    global avgdel, avgniq,numcus,time,aniq,totdel,autil,util, w, l, pn, p0
+    global avgdel, avgniq,numcus,time,aniq,totdel,autil,util, w, l, pn, p0, cont_niq, pn_corridas, n_corrida
     avgdel=totdel/numcus
     avgniq=aniq/time 
     util=autil/time
     w = avgdel + (1/mservt)
-    l = marrvt * w
+    l = marrvt * w    
     util_corridas.append(util)
     avgdel_corridas.append(avgdel)
     avgniq_corridas.append(avgniq)
     w_corridas.append(w)
     l_corridas.append(l)
-    pn_corridas.append(pn)
     time_corridas.append(time)
+    pn_corridas.append(cont_niq[n_cli])
+    prob_corridas.append(cont_niq[n_cli]/(sum(cont_niq)))
     print('Cantidad de clientes que completaron demora: ', numcus) #para verificar
     print('Demora promedio del cliente en cola: {0}'.format(avgdel))
     print('Numero promedio del cliente en cola: {0}'.format(avgniq))
@@ -145,6 +153,8 @@ def report():
     print('Número promedio de clientes en sistema: {0}'.format(l))
     print('Probabilidad de {0} clientes en el sistema: {1}'.format(n_cli, pn))
     print('Tiempo que finaliza la simulacion: {0}'.format(time))
+    print('Cantidad de veces que la cola tuvo (i) tamaño: ', cont_niq)
+    print('Cantidad de veces que la cola tuvo tamaño {0}: {1}'.format(n_cli, cont_niq[n_cli]))   
 
 def uptavg():
     global tsle, time, tlevnt, niq, aniq, autil, server, totdel, numcus, avgdel_acum, server_acum, niq_acum, cont_niq
@@ -152,21 +162,30 @@ def uptavg():
     tlevnt=time
     avgniq_acum.append(aniq/time) #seria hacer el report en cada vuelta
     util_acum.append(autil/time)#seria hacer el report en cada vuelta
-    if(numcus==0): avgdel_acum.append(0)
-    if(numcus!=0): avgdel_acum.append(totdel/numcus)
+    if(numcus==0): 
+        avgdel_acum.append(0)
+        w_acum.append(0)
+        l_acum.append(0)
+    
+    if(numcus!=0): 
+        avgdel_acum.append(totdel/numcus) #avgdel
+        w_acum.append( (totdel/numcus) + (1/mservt)) #w
+        l_acum.append(marrvt * ( (totdel/numcus) + (1/mservt))) 
+
     numcus_acum.append(numcus)
     time_acum.append(time)
     server_acum.append(server)
     niq_acum.append(niq)
     aniq = aniq+(niq*tsle)
     autil = autil+ (server*tsle)
-    cont_niq.insert(niq, cont_niq[niq]+1)
+    cont_niq[niq]=cont_niq[niq]+1 
 
 
 
-repes=10 #define cuantas corridas comparamos
 
 for i in range(0, repes):
+    global n_corrida
+    n_corrida=i
     init()  
     print ("Tiempo medio entre arrivos(minutos): ",marrvt,'//Tiempo medio de servicio(minutos): ', mservt,'//Número de demoras de clientes p finalizar: ', totcus)
     while(numcus<totcus): #verifico que no pase el límite fijado
@@ -174,12 +193,10 @@ for i in range(0, repes):
         if (stop==0): #cola de eventos NO vacía
             uptavg()
             if (next_==1):
-                tot_niq+=1
                 #print('ARRIVE ')
                 stop2=arrive()
                 if(stop2==1): break
             elif(next_==2):
-                tot_niq+=1
                 #print('DEPART')
                 depart()
         elif(stop==1): #cola de eventos vacía
@@ -187,30 +204,57 @@ for i in range(0, repes):
     stop2_corridas.append(stop2)
     report()
 
-    plt.subplot(131)
-    plt.plot(numcus_acum, avgdel_acum, label="Corrida {0}".format(i+1), alpha=0.5)
-    plt.subplot(132)
-    plt.plot(time_acum, avgniq_acum, label="Corrida {0}".format(i+1), alpha=0.5)
-    plt.subplot(133)
-    plt.plot(time_acum, util_acum, label="Corrida {0}".format(i+1), alpha=0.5)
-    
+    plt.subplot(321)
+    plt.plot(numcus_acum, avgdel_acum, alpha=0.5)
+    plt.subplot(323)
+    plt.plot(time_acum, avgniq_acum, alpha=0.5)
+    plt.subplot(325)
+    plt.plot(time_acum, util_acum, alpha=0.5)
+    plt.subplot(222)
+    plt.plot(numcus_acum, w_acum, alpha=0.5)
+    plt.subplot(224)
+    plt.plot(time_acum, l_acum, alpha=0.5)
+
 
 #PROMEDIO DE PROMEDIOS
 
 #valores teóricos
-wq= 0.0139 #d(n) demora (tiempo) promedio de clientes en cola
-p= 0.111 #u(n) utilización del servidor
-lq= 0.0139 #q(n) promedio de clientes en cola (longitud)
-w_c= 0# tiempo promedio de demora en sistema
-l_c= 0# numero promedio de cli en sistema
-if (qlimit <= 100): deneg_serv = 1 - sum((marrvt/mservt)**i * p0 for i in range (0, qlimit)) # probabilidad de denegación de servicio
-p0 = 1 - (marrvt/mservt)
-pn = (marrvt/mservt)**n_cli *p0 #probabilidad de n cli en sistema
+ro= marrvt/mservt #u(n) utilización del servidor
+p=ro
+lq= (ro**2)/(1-ro) #q(n) promedio de clientes en cola (longitud)
+wq= lq/marrvt #d(n) demora (tiempo) promedio de clientes en cola
+w_esp= wq + (1/mservt)# tiempo promedio de demora en sistema
+l_esp= marrvt*w_esp # numero promedio de cli en sistema
+p0 = 1 - ro
+pn = (ro)**n_cli *p0 #probabilidad de n cli en sistema
+if (qlimit <= 100): deneg_serv = 1 - sum((ro)**i * p0 for i in range (0, qlimit)) # probabilidad de denegación de servicio
 
+porc=np.mean(util_corridas)*100
+print ("\nPROMEDIO DE PROMEDIOS: \nDemora promedio en cola Wq observada: ",np.mean(avgdel_corridas),
+    '\nDemora promedio en cola Wq esperada: ',wq,
+    '\nLongitud promedio en cola Lq observada: ', np.mean(avgniq_corridas),
+    '\nLongitud promedio en cola Lq esperada: ', lq,
+    '\nUtilización del servidor u(n) observada : %.2f ' % (porc), '%', 
+    '\nUtilización del servidor u(n) esperada: %.2f ' % (ro*100), '%', 
+    '\nDemora promedio en el sistema W observada: ', np.mean(w_corridas), 
+    '\nDemora promedio en el sistema W esperada: ', w_esp, 
+    '\nNúmero promedio de clientes en el sistema L observada: ', np.mean(l_corridas), 
+    '\nNúmero promedio de clientes en el sistema L esperada: ', l_esp, 
+    '\nProbabilidad promedio observada de {0} clientes en sistema: {1}'.format(n_cli, sum(prob_corridas)/repes), 
+    '\nProbabilidad promedio esperada de {0} clientes en sistema: {1}'.format(n_cli, pn),
+    '\nProbabilidad promedio observada de denegación de servicio: ', (sum(stop2_corridas))/repes,
+    '\nProbabilidad promedio esperada de denegación de servicio: ', deneg_serv)
+    
 
-#gráficas
+#print('Corridas en las cuales se denegó (1) o no (0) el servicio: ', stop2_corridas)
+#print('Cantidad de veces que la cola tuvo (i) tamaño: ', cont_niq)
+#print('Cantidad de veces que la cola tuvo {0} tamaño en i corrida: {1}'.format(n_cli, pn_corridas))
+#print('Probabilidad observada de cola de longitud {0} en cada corrida i: {1}'.format(n_cli, prob_corridas))
+
+#GRÁFICAS
+#1
 x1=range(0, totcus)  
-plt.subplot(131)
+plt.subplot(321)
 plt.plot(x1, [np.mean(avgdel_corridas) for i in x1], label="d(n) Observada")
 plt.plot(x1, [wq for i in x1], label="d(n) Esperada")#por calcu
 plt.xlabel("Clientes")
@@ -219,23 +263,41 @@ plt.title("Demora promedio en cola")
 plt.legend()
 
 x=range(0, round(max(time_corridas))+1)
-plt.subplot(132)
-plt.plot(x, [np.mean(avgniq_corridas) for i in x], label="q(n) Observada")
-plt.plot(x, [lq for i in x], label="q(n) Esperada")
+plt.subplot(323)
+plt.plot(x, [np.mean(avgniq_corridas) for i in x], label="q(t) Observada")
+plt.plot(x, [lq for i in x], label="q(t) Esperada")
 plt.xlabel("Tiempo (t)")
 plt.ylabel("Q(t)")
 plt.title("Longitud promedio de la cola")
 plt.legend()
 
-plt.subplot(133)
-plt.plot(x, [np.mean(util_corridas) for i in x], label="u(n) Observada")
-plt.plot(x, [p for i in x], label="u(n) Esperada")
+plt.subplot(325)
+plt.plot(x, [np.mean(util_corridas) for i in x], label="u(t) Observada")
+plt.plot(x, [p for i in x], label="u(t) Esperada")
 plt.xlabel("Tiempo (t)")
 plt.ylabel("B(t)")
 plt.title("Utilización del servidor")
 plt.legend()
-#plt.show()
 
+x1=range(0, totcus)  
+plt.subplot(222)
+plt.plot(x1, [np.mean(w_corridas) for i in x1], label="w(n) Observada")
+plt.plot(x1, [w_esp for i in x1], label="w(n) Esperada")#por calcu
+plt.xlabel("Clientes")
+plt.ylabel("W(n)")
+plt.title("Demora promedio en el sistema")
+plt.legend()
+
+plt.subplot(224)
+plt.plot(x, [np.mean(l_corridas) for i in x], label="L(t) Observada")
+plt.plot(x, [l_esp for i in x], label="L(t) Esperada")
+plt.xlabel("Tiempo (t)")
+plt.ylabel("L(t)")
+plt.title("Número promedio de clientes en el sistema")
+plt.legend()
+plt.show()
+
+#2
 plt.subplot(211)
 plt.step(time_acum, server_acum)
 plt.fill_between(time_acum,server_acum, step="pre", alpha=0.4)
@@ -249,15 +311,20 @@ plt.fill_between(time_acum,niq_acum, step="pre", alpha=0.4, color='r')
 plt.title("Variación de la longitud de la cola de corrida {0} con {1} clientes".format(i+1, totcus))
 plt.xlabel("Tiempo (t)")
 plt.ylabel("Q(t)")
-#plt.show()
+plt.show()
 
-
-porc=np.mean(util_corridas)*100
-print ("\nPROMEDIO DE PROMEDIOS:\nDemora promedio en cola Wq: ",np.mean(avgdel_corridas),'\nLongitud promedio en cola Lq: ', np.mean(avgniq_corridas),'\nUtilización del servidor u(n): %.2f ' % (porc), '%', '\nDemora promedio en el sistema W: ', np.mean(w_corridas), '\nNúmero promedio de clientes en el sistema L: ', np.mean(l_corridas), '\nProbabilidad promedio esperada de {0} clientes en sistema: {1}'.format(n_cli, pn), '\nProbabilidad promedio observada de {0} clientes en sistema: {1}'.format(n_cli, cont_niq[n_cli]/tot_niq), '\nProbabilidad promedio esperada de denegación de servicio: ', deneg_serv)
-
-print(stop2_corridas)
-print(cont_niq)
-print(tot_niq)
-plt.pie([porc, 100-porc], labels=['Busy', 'Idle'], autopct='%.2f%%', shadow=True, startangle=90, colors=['pink', 'cyan'])
+#3
+plt.pie([porc, 100-porc], labels=['Busy', 'Idle'], autopct='%.2f%%', shadow=True, startangle=90, colors=['magenta', 'pink'])
 plt.title("Utilización del servidor")
-#plt.show()
+plt.show()
+
+#4
+X = np.arange(repes)
+plt.bar(X + 0.00, pn, color = "magenta", width = 0.25, label='Pn Esperada')
+plt.bar(X + 0.25, prob_corridas, color = "pink", width = 0.25, label='Pn Observada')
+plt.xticks(X+0.12, ["1","2","3","4", "5", "6", "7", "8", "9", "10"])
+plt.title('Probabilidad de {0} clientes en cola'.format(n_cli))
+plt.ylabel('Pn')
+plt.xlabel('Corridas')
+plt.legend()
+plt.show()
